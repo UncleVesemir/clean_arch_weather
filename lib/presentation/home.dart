@@ -258,12 +258,13 @@ class _HomeState extends State<Home> {
             Container(
               color: Colors.white,
               child: Padding(
-                padding: const EdgeInsets.all(30.0),
+                padding: const EdgeInsets.only(left: 30, right: 30, top: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Today, 11 Feb',
                         style: AppTextStyles.mediumTextlowDarkColor),
+                    const SizedBox(height: 3),
                     Text('Polotsk', style: AppTextStyles.bigTextDarkColor),
                     const Padding(
                       padding: EdgeInsets.all(25),

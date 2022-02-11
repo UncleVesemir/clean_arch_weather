@@ -46,7 +46,7 @@ class AppTextStyles {
 
   static final TextStyle mediumTextlowDarkColor = TextStyle(
     color: AppColors.lowDarkColor,
-    fontSize: 25,
+    fontSize: 16,
     fontWeight: FontWeight.w600,
   );
 

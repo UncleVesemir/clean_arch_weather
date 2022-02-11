@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:clean_arch_weather/const.dart';
 import 'package:flutter/material.dart';
 
