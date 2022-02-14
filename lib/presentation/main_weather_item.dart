@@ -41,17 +41,17 @@ class MainItem extends StatelessWidget {
             height: 200,
             width: 300,
             child: Image.asset(
-              Images.sun + '27.png',
+              Images.moon + '31.png',
             ),
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 15),
           GradientText(
             'Cloudy',
             gradientDirection: GradientDirection.btt,
             colors: AppGradientColors.gradientText,
             style: AppTextStyles.bigTextDarkColor,
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,

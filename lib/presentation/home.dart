@@ -1,4 +1,9 @@
+import 'dart:developer';
+
 import 'package:clean_arch_weather/const.dart';
+import 'package:clean_arch_weather/data/api/request/get_day_weather_body.dart';
+import 'package:clean_arch_weather/data/api/service/weather_service.dart';
+import 'package:clean_arch_weather/data/gps/gps_location.dart';
 import 'package:clean_arch_weather/overrides.dart';
 import 'package:clean_arch_weather/presentation/city_item.dart';
 import 'package:clean_arch_weather/presentation/main_weather_item.dart';
@@ -412,8 +417,21 @@ class _HomeState extends State<Home> {
     MainItem(),
   ];
 
+  void printWeather() async {
+    var data = await WeatherService.getDayWeather(
+        GetDayBody(latitude: 45, longitude: 32));
+    log(data!.toJson().toString());
+  }
+
+  void getLocation() async {
+    var data = await GetLocation.getPermission();
+    print(data ?? 'null');
+  }
+
   @override
   Widget build(BuildContext context) {
+    // getLocation();
+    // printWeather();
     return Scaffold(
       extendBody: true,
       body: SafeArea(
@@ -421,35 +439,41 @@ class _HomeState extends State<Home> {
           children: <Widget>[
             Container(
               color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30, top: 12),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Today, 11 Feb',
-                        style: AppTextStyles.lowDarkS24W400Normal),
-                    const SizedBox(height: 3),
-                    Text('Polotsk', style: AppTextStyles.cityName),
-                    SizedBox(
-                      height: 370,
-                      width: 320,
-                      child: ListWheelScrollViewX(
-                        itemExtent: 300,
-                        diameterRatio: 3,
-                        scrollDirection: Axis.horizontal,
-                        children: _mainItems,
-                      ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25.0, top: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Today, 11 Feb',
+                            style: AppTextStyles.lowDarkS24W400Normal),
+                        const SizedBox(height: 3),
+                        Text('Polotsk', style: AppTextStyles.cityName),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 370,
+                    width: double.infinity,
+                    child: ListWheelScrollViewX(
+                      itemExtent: 340,
+                      diameterRatio: 3,
+                      scrollDirection: Axis.horizontal,
+                      children: _mainItems,
+                    ),
+                  ),
+                ],
               ),
             ),
             _buildSheet(),
             Positioned(
               left: 0,
               right: 0,
-              bottom: -5 * (1 - _percent * 19),
+              bottom: -5 * (1 - _percent * 80),
               child: Opacity(
                 opacity: 1 + _percent,
                 child: _buildBottomBar(),

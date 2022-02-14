@@ -83,7 +83,7 @@ class AppTextStyles {
   );
 
   static final TextStyle lowDarkS24W400Normal = TextStyle(
-    color: AppColors.lowDarkColor,
+    color: AppColors.darkColor.withOpacity(0.6),
     fontSize: 24,
     fontWeight: FontWeight.w400,
   );

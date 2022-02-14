@@ -12,7 +12,7 @@ class WeatherItem extends StatelessWidget {
         color: AppColors.lowMainColor,
       ),
       height: 105,
-      width: 62,
+      width: 65,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(12),

@@ -18,6 +18,9 @@ dependencies:
   flutter_glow: ^0.2.0
   simple_gradient_text: ^1.2.2
 
+  http: ^0.13.4
+  location: ^4.3.0
+
 
 
   cupertino_icons: ^1.0.2

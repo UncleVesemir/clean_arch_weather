@@ -96,7 +96,7 @@ class CityItem extends StatelessWidget {
           ],
         ),
         Image.asset(
-          Images.cloud + '33.png',
+          Images.sun + '30.png',
           width: 90,
           height: 90,
         ),
