@@ -11,24 +11,28 @@ class WeatherItem extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(22)),
         color: AppColors.lowMainColor,
       ),
-      height: 110,
-      width: 70,
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          children: [
-            Image.asset(Images.sun + '27.png'),
-            const SizedBox(height: 10),
-            const Text(
-              '12:00',
-              style: AppTextStyles.lowText,
-            ),
-            const SizedBox(height: 3),
-            const Text(
-              '35°C',
-              style: AppTextStyles.lowText,
-            )
-          ],
+      height: 105,
+      width: 62,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(Images.sun + '27.png'),
+              const SizedBox(height: 7),
+              const Text(
+                '12:00',
+                style: AppTextStyles.extraLowText,
+              ),
+              const SizedBox(height: 3),
+              const Text(
+                '35°C',
+                style: AppTextStyles.mediumText,
+              )
+            ],
+          ),
         ),
       ),
     );

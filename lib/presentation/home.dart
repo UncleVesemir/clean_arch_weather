@@ -1,9 +1,12 @@
 import 'package:clean_arch_weather/const.dart';
 import 'package:clean_arch_weather/overrides.dart';
+import 'package:clean_arch_weather/presentation/city_item.dart';
 import 'package:clean_arch_weather/presentation/main_weather_item.dart';
 import 'package:clean_arch_weather/presentation/weather_item.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_glow/flutter_glow.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -107,6 +110,144 @@ class _HomeState extends State<Home> {
     );
   }
 
+  List<Color> gradientColors = [
+    AppColors.lowDarkColor.withOpacity(0.1),
+    Colors.white,
+    AppColors.lowDarkColor.withOpacity(0.1),
+  ];
+
+  List<Color> gradientColors2 = [
+    AppColors.lowMainColor.withOpacity(0.1),
+    AppColors.lowMainColor,
+    AppColors.lowMainColor.withOpacity(0.1),
+  ];
+
+  LineChartData avgData() {
+    return LineChartData(
+      lineTouchData: LineTouchData(
+        enabled: true,
+        handleBuiltInTouches: true,
+        getTouchedSpotIndicator: (LineChartBarData data, List<int> list) {
+          List<TouchedSpotIndicatorData> spots = [
+            TouchedSpotIndicatorData(
+              FlLine(
+                color: Colors.white,
+                dashArray: [9, 0, 9],
+              ),
+              FlDotData(
+                show: true,
+                getDotPainter: (FlSpot spot, double value,
+                    LineChartBarData data, int value2) {
+                  return FlDotCirclePainter(
+                    color: Colors.white,
+                    radius: 10,
+                    // strokeWidth: 2,
+                    // strokeColor: Colors.black,
+                  );
+                },
+              ),
+            ),
+          ];
+          return spots;
+        },
+        touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
+          if (event is FlLongPressStart) {}
+        },
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipItems: (line) {
+            final List<LineTooltipItem> items = [];
+            for (var element in line) {
+              final text =
+                  '${element.x.toInt()} January, 14:00, ${element.y}°C';
+              items.add(
+                LineTooltipItem(
+                  text,
+                  AppTextStyles.lightLowText,
+                ),
+              );
+            }
+            return items;
+          },
+          tooltipBgColor: Colors.grey.withOpacity(0.1),
+          tooltipRoundedRadius: 30.0,
+          tooltipMargin: 20,
+        ),
+      ),
+      gridData: FlGridData(
+        show: true,
+        drawHorizontalLine: true,
+        drawVerticalLine: true,
+        // verticalInterval: 2,
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            // color: const Color(0xff37434d),
+            color: Colors.white.withOpacity(0.1),
+            dashArray: [9, 0, 9],
+            strokeWidth: 1,
+          );
+        },
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            // color: const Color(0xff37434d),
+            color: Colors.white.withOpacity(0.1),
+            dashArray: [9, 0, 9],
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: false,
+        topTitles: SideTitles(showTitles: false),
+        rightTitles: SideTitles(showTitles: false),
+      ),
+      borderData: FlBorderData(
+        show: false,
+      ),
+      minX: 0,
+      maxX: 10,
+      minY: 0,
+      maxY: 8,
+      lineBarsData: [
+        LineChartBarData(
+          spots: const [
+            FlSpot(0, 3),
+            FlSpot(2, 1),
+            FlSpot(3, 5),
+            FlSpot(4, 2),
+            FlSpot(5, 8),
+            FlSpot(6, 3),
+            FlSpot(7, 1),
+            FlSpot(8, 5),
+            FlSpot(9, 2),
+            FlSpot(10, 8),
+          ],
+          isCurved: true,
+          // shadow: Shadow(
+          //   color: gradientColors[1].withOpacity(0.6),
+          //   blurRadius: 20,
+          //   offset: Offset.fromDirection(1.5708, 20),
+          // ),
+          colors: [
+            ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                .lerp(0)!,
+            ColorTween(begin: gradientColors[1], end: gradientColors[1])
+                .lerp(1)!,
+            ColorTween(begin: gradientColors[1], end: gradientColors[2])
+                .lerp(1)!,
+          ],
+          barWidth: 8,
+          isStrokeCapRound: true,
+          lineChartStepData: LineChartStepData(
+            stepDirection: 20,
+          ),
+          dotData: FlDotData(
+            show: false,
+          ),
+        ),
+      ],
+    );
+  }
+
   Column _buildBottomSheetPageOpened() {
     return Column(
       children: [
@@ -128,7 +269,10 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
-        const SizedBox(height: 240),
+        SizedBox(
+          height: 200,
+          child: LineChart(avgData()),
+        ),
         SizedBox(
           width: double.infinity,
           height: 80,
@@ -165,47 +309,59 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
+        const SizedBox(height: 20),
+        const CityItem(
+            city: 'Polatsk', windSpeed: 23, temperature: 23, humidity: 78),
+        const SizedBox(height: 15),
+        const CityItem(
+            city: 'Novopolatsk', windSpeed: 18, temperature: 26, humidity: 83),
+        const SizedBox(height: 15),
+        const CityItem(
+            city: 'Minsk', windSpeed: 10, temperature: 30, humidity: 88),
       ],
     );
   }
 
-  Column _buildBottomSheetPageClosed() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Today',
-              style: AppTextStyles.lowText,
-            ),
-            Row(
-              children: const [
-                Text(
-                  'Next 7 Days',
-                  style: AppTextStyles.lowText,
-                ),
-                SizedBox(width: 10),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 12,
-                  color: Colors.white,
-                )
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            WeatherItem(),
-            WeatherItem(),
-            WeatherItem(),
-            WeatherItem(),
-          ],
-        ),
-      ],
+  Opacity _buildBottomSheetPageClosed() {
+    return Opacity(
+      opacity: 1 - _percent.abs() * 6,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Today',
+                style: AppTextStyles.lowText,
+              ),
+              Row(
+                children: const [
+                  Text(
+                    'Next 7 Days',
+                    style: AppTextStyles.lowText,
+                  ),
+                  SizedBox(width: 10),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 12,
+                    color: Colors.white,
+                  )
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              WeatherItem(),
+              WeatherItem(),
+              WeatherItem(),
+              WeatherItem(),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -248,6 +404,14 @@ class _HomeState extends State<Home> {
     );
   }
 
+  final List<Widget> _mainItems = const [
+    MainItem(),
+    MainItem(),
+    MainItem(),
+    MainItem(),
+    MainItem(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -260,15 +424,22 @@ class _HomeState extends State<Home> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30, top: 12),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Today, 11 Feb',
-                        style: AppTextStyles.mediumTextlowDarkColor),
+                        style: AppTextStyles.lowDarkS24W400Normal),
                     const SizedBox(height: 3),
-                    Text('Polotsk', style: AppTextStyles.bigTextDarkColor),
-                    const Padding(
-                      padding: EdgeInsets.all(25),
-                      child: MainItem(),
+                    Text('Polotsk', style: AppTextStyles.cityName),
+                    SizedBox(
+                      height: 370,
+                      width: 320,
+                      child: ListWheelScrollViewX(
+                        itemExtent: 300,
+                        diameterRatio: 3,
+                        scrollDirection: Axis.horizontal,
+                        children: _mainItems,
+                      ),
                     ),
                   ],
                 ),

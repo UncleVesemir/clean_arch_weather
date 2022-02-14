@@ -1,4 +1,5 @@
 import 'package:clean_arch_weather/const.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:flutter/material.dart';
 
 class MainItem extends StatelessWidget {
@@ -16,7 +17,7 @@ class MainItem extends StatelessWidget {
           ),
           Text(
             bottom,
-            style: AppTextStyles.bigTextDarkColor,
+            style: AppTextStyles.darkS20W400Normal,
           ),
         ],
       );
@@ -39,30 +40,23 @@ class MainItem extends StatelessWidget {
           SizedBox(
             height: 200,
             width: 300,
-            child: Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 4,
-                    blurRadius: 100,
-                    offset: const Offset(0, 40), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: Image.asset(
-                Images.sun + '27.png',
-              ),
+            child: Image.asset(
+              Images.sun + '27.png',
             ),
           ),
           const SizedBox(height: 5),
-          Text('Sunny', style: AppTextStyles.bigTextlowDarkColor),
-          const SizedBox(height: 15),
+          GradientText(
+            'Cloudy',
+            gradientDirection: GradientDirection.btt,
+            colors: AppGradientColors.gradientText,
+            style: AppTextStyles.bigTextDarkColor,
+          ),
+          const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _rowItem('Wind', '234'),
+              _rowItem('Wind', '4 m/s'),
               _verticalDivider(),
               _rowItem('Temp', '30°C'),
               _verticalDivider(),
