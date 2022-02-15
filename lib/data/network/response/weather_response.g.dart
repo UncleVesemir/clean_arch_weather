@@ -10,12 +10,12 @@ WeatherResponse _$WeatherResponseFromJson(Map<String, dynamic> json) =>
     WeatherResponse(
       (json['lat'] as num).toDouble(),
       (json['lon'] as num).toDouble(),
-      Current.fromJson(json['current'] as Map<String, dynamic>),
+      CurrentModel.fromJson(json['current'] as Map<String, dynamic>),
       (json['hourly'] as List<dynamic>)
-          .map((e) => Current.fromJson(e as Map<String, dynamic>))
+          .map((e) => CurrentModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       (json['daily'] as List<dynamic>)
-          .map((e) => Daily.fromJson(e as Map<String, dynamic>))
+          .map((e) => DailyModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

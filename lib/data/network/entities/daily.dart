@@ -5,12 +5,12 @@ import 'package:json_annotation/json_annotation.dart';
 part 'daily.g.dart';
 
 @JsonSerializable()
-class Daily {
+class DailyModel {
   @JsonKey(name: 'dt')
   final int dt;
 
   @JsonKey(name: 'temp')
-  final Temperature temp;
+  final TemperatureModel temp;
 
   @JsonKey(name: 'pressure')
   final int pressure;
@@ -25,9 +25,9 @@ class Daily {
   final int windDeg;
 
   @JsonKey(name: 'weather')
-  final List<WeatherElement> weather;
+  final List<WeatherElementModel> weather;
 
-  Daily(
+  DailyModel(
     this.dt,
     this.temp,
     this.pressure,
@@ -37,7 +37,8 @@ class Daily {
     this.weather,
   );
 
-  factory Daily.fromJson(Map<String, dynamic> json) => _$DailyFromJson(json);
+  factory DailyModel.fromJson(Map<String, dynamic> json) =>
+      _$DailyModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DailyToJson(this);
+  Map<String, dynamic> toJson() => _$DailyModelToJson(this);
 }

@@ -6,7 +6,7 @@ part of 'current.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Current _$CurrentFromJson(Map<String, dynamic> json) => Current(
+CurrentModel _$CurrentModelFromJson(Map<String, dynamic> json) => CurrentModel(
       json['dt'] as int,
       (json['temp'] as num).toDouble(),
       (json['feels_like'] as num).toDouble(),
@@ -16,11 +16,12 @@ Current _$CurrentFromJson(Map<String, dynamic> json) => Current(
       (json['wind_speed'] as num).toDouble(),
       json['wind_deg'] as int,
       (json['weather'] as List<dynamic>)
-          .map((e) => WeatherElement.fromJson(e as Map<String, dynamic>))
+          .map((e) => WeatherElementModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$CurrentToJson(Current instance) => <String, dynamic>{
+Map<String, dynamic> _$CurrentModelToJson(CurrentModel instance) =>
+    <String, dynamic>{
       'dt': instance.dt,
       'temp': instance.temp,
       'feels_like': instance.feelsLike,

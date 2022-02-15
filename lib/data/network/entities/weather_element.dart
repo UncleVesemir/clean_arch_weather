@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'weather_element.g.dart';
 
 @JsonSerializable()
-class WeatherElement {
+class WeatherElementModel {
   @JsonKey(name: 'id')
   final int id;
 
@@ -13,10 +13,10 @@ class WeatherElement {
   @JsonKey(name: 'description')
   final String description;
 
-  WeatherElement(this.id, this.main, this.description);
+  WeatherElementModel(this.id, this.main, this.description);
 
-  factory WeatherElement.fromJson(Map<String, dynamic> json) =>
-      _$WeatherElementFromJson(json);
+  factory WeatherElementModel.fromJson(Map<String, dynamic> json) =>
+      _$WeatherElementModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$WeatherElementToJson(this);
+  Map<String, dynamic> toJson() => _$WeatherElementModelToJson(this);
 }

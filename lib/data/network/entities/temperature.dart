@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'temperature.g.dart';
 
 @JsonSerializable()
-class Temperature {
+class TemperatureModel {
   @JsonKey(name: 'day')
   final double day;
 
@@ -22,7 +22,7 @@ class Temperature {
   @JsonKey(name: 'morn')
   final double morn;
 
-  Temperature(
+  TemperatureModel(
     this.day,
     this.min,
     this.max,
@@ -31,8 +31,8 @@ class Temperature {
     this.morn,
   );
 
-  factory Temperature.fromJson(Map<String, dynamic> json) =>
-      _$TemperatureFromJson(json);
+  factory TemperatureModel.fromJson(Map<String, dynamic> json) =>
+      _$TemperatureModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TemperatureToJson(this);
+  Map<String, dynamic> toJson() => _$TemperatureModelToJson(this);
 }

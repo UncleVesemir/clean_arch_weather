@@ -13,13 +13,13 @@ class WeatherResponse {
   final double lon;
 
   @JsonKey(name: 'current')
-  final Current current;
+  final CurrentModel current;
 
   @JsonKey(name: 'hourly')
-  final List<Current> hourly;
+  final List<CurrentModel> hourly;
 
   @JsonKey(name: 'daily')
-  final List<Daily> daily;
+  final List<DailyModel> daily;
 
   WeatherResponse(
     this.lat,

@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'current.g.dart';
 
 @JsonSerializable()
-class Current {
+class CurrentModel {
   @JsonKey(name: 'dt')
   final int dt;
 
@@ -30,9 +30,9 @@ class Current {
   final int windDeg;
 
   @JsonKey(name: 'weather')
-  final List<WeatherElement> weather;
+  final List<WeatherElementModel> weather;
 
-  Current(
+  CurrentModel(
     this.dt,
     this.temp,
     this.feelsLike,
@@ -44,8 +44,8 @@ class Current {
     this.weather,
   );
 
-  factory Current.fromJson(Map<String, dynamic> json) =>
-      _$CurrentFromJson(json);
+  factory CurrentModel.fromJson(Map<String, dynamic> json) =>
+      _$CurrentModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CurrentToJson(this);
+  Map<String, dynamic> toJson() => _$CurrentModelToJson(this);
 }

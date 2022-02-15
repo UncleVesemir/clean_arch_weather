@@ -6,7 +6,8 @@ part of 'temperature.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Temperature _$TemperatureFromJson(Map<String, dynamic> json) => Temperature(
+TemperatureModel _$TemperatureModelFromJson(Map<String, dynamic> json) =>
+    TemperatureModel(
       (json['day'] as num).toDouble(),
       (json['min'] as num).toDouble(),
       (json['max'] as num).toDouble(),
@@ -15,7 +16,7 @@ Temperature _$TemperatureFromJson(Map<String, dynamic> json) => Temperature(
       (json['morn'] as num).toDouble(),
     );
 
-Map<String, dynamic> _$TemperatureToJson(Temperature instance) =>
+Map<String, dynamic> _$TemperatureModelToJson(TemperatureModel instance) =>
     <String, dynamic>{
       'day': instance.day,
       'min': instance.min,
