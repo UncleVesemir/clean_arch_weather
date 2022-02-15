@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:clean_arch_weather/const.dart';
-import 'package:clean_arch_weather/data/api/request/get_day_weather_body.dart';
-import 'package:clean_arch_weather/data/api/service/weather_service.dart';
 import 'package:clean_arch_weather/data/gps/gps_location.dart';
+import 'package:clean_arch_weather/data/network/api_service.dart';
 import 'package:clean_arch_weather/overrides.dart';
 import 'package:clean_arch_weather/presentation/city_item.dart';
 import 'package:clean_arch_weather/presentation/main_weather_item.dart';
 import 'package:clean_arch_weather/presentation/weather_item.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -417,21 +417,30 @@ class _HomeState extends State<Home> {
     MainItem(),
   ];
 
-  void printWeather() async {
-    var data = await WeatherService.getDayWeather(
-        GetDayBody(latitude: 45, longitude: 32));
-    log(data!.toJson().toString());
-  }
-
   void getLocation() async {
     var data = await GetLocation.getPermission();
     print(data ?? 'null');
+  }
+
+  void getWeather() async {
+    ApiService apiService = ApiService(dio.Dio());
+
+    final response = await apiService.getWeather(
+      32,
+      53,
+      '7aeb287065deb65dcdd0b7a08e8d6267',
+      'en',
+      'metric',
+    );
+
+    print(response.daily[0].toJson());
   }
 
   @override
   Widget build(BuildContext context) {
     // getLocation();
     // printWeather();
+    getWeather();
     return Scaffold(
       extendBody: true,
       body: SafeArea(

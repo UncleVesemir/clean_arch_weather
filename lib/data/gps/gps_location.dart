@@ -1,5 +1,3 @@
-import 'package:clean_arch_weather/data/api/request/get_day_weather_body.dart';
-import 'package:clean_arch_weather/data/api/service/weather_service.dart';
 import 'package:clean_arch_weather/domain/model/location.dart';
 import 'package:location/location.dart';
 
