@@ -12,28 +12,33 @@ dependencies:
   flutter:
     sdk: flutter
 
+#NETWORK
   retrofit: ^3.0.1+1
   json_annotation: any
   dio: ^4.0.4
 
-
+#GPS
   bottom_navy_bar: ^6.0.0
   hexcolor: ^2.0.6  
   fl_chart: ^0.41.0
   flutter_glow: ^0.2.0
   simple_gradient_text: ^1.2.2
 
-  http: ^0.13.4
+#MATH
+  equatable: ^2.0.3
+  intl: ^0.17.0
+
+#GPS
   location: ^4.3.0
 
-
-
+#OTHER
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   
+ #NETWORK 
   retrofit_generator: '>=4.0.0 <5.0.0'
   build_runner: ^2.1.7
   json_serializable: '>4.4.0'

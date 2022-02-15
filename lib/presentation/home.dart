@@ -440,7 +440,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     // getLocation();
     // printWeather();
-    getWeather();
+    // getWeather();
     return Scaffold(
       extendBody: true,
       body: SafeArea(
