@@ -1,5 +1,6 @@
-import 'package:clean_arch_weather/data/network/entities/current.dart';
-import 'package:clean_arch_weather/data/network/entities/daily.dart';
+import 'package:clean_arch_weather/data/network/models/current.dart';
+import 'package:clean_arch_weather/data/network/models/daily.dart';
+import 'package:clean_arch_weather/domain/entities/weather.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'weather_response.g.dart';

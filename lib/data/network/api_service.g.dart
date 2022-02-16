@@ -8,7 +8,7 @@ part of 'api_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps
 
-class _ApiService implements ApiService {
+class _ApiService implements WeatherApiService {
   _ApiService(this._dio, {this.baseUrl}) {
     baseUrl ??= 'https://api.openweathermap.org/data/2.5/onecall?';
   }
@@ -18,7 +18,8 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<WeatherResponse> getWeather(lat, lon, appId, lang, units) async {
+  Future<HttpResponse<WeatherResponse>> getWeather(
+      lat, lon, appId, lang, units) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'lat': lat,
@@ -36,7 +37,7 @@ class _ApiService implements ApiService {
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = WeatherResponse.fromJson(_result.data!);
-    return value;
+    return HttpResponse(value, _result);
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

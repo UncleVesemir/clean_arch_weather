@@ -1,5 +1,5 @@
-import 'package:clean_arch_weather/domain/model/current.dart';
-import 'package:clean_arch_weather/domain/model/daily.dart';
+import 'package:clean_arch_weather/domain/entities/current.dart';
+import 'package:clean_arch_weather/domain/entities/daily.dart';
 import 'package:equatable/equatable.dart';
 
 class Weather extends Equatable {

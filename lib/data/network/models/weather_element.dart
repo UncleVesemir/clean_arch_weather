@@ -1,4 +1,4 @@
-import 'package:clean_arch_weather/domain/model/weather_element.dart';
+import 'package:clean_arch_weather/domain/entities/weather_element.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'weather_element.g.dart';

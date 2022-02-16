@@ -1,4 +1,4 @@
-import 'package:clean_arch_weather/domain/model/location.dart';
+import 'package:clean_arch_weather/domain/entities/location.dart';
 import 'package:location/location.dart';
 
 class GetLocation {

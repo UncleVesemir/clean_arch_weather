@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:clean_arch_weather/const.dart';
+import 'package:clean_arch_weather/core/utils/constants.dart';
 import 'package:clean_arch_weather/data/gps/gps_location.dart';
 import 'package:clean_arch_weather/data/network/api_service.dart';
 import 'package:clean_arch_weather/overrides.dart';
@@ -457,17 +458,17 @@ class _HomeState extends State<Home> {
   }
 
   void getWeather() async {
-    ApiService apiService = ApiService(dio.Dio());
+    WeatherApiService apiService = WeatherApiService(dio.Dio());
 
     final response = await apiService.getWeather(
       32,
       53,
-      '7aeb287065deb65dcdd0b7a08e8d6267',
+      kAppId,
       'en',
       'metric',
     );
 
-    print(response.daily[0].toJson());
+    print(response.data.daily[0]);
   }
 
   @override
@@ -489,8 +490,10 @@ class _HomeState extends State<Home> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Today, 11 Feb',
-                            style: AppTextStyles.lowDarkS24W400Normal),
+                        Text(
+                          'Today, 11 Feb',
+                          style: AppTextStyles.lowDarkS24W400Normal,
+                        ),
                         const SizedBox(height: 3),
                         Text('Polotsk', style: AppTextStyles.cityName),
                       ],
@@ -502,7 +505,7 @@ class _HomeState extends State<Home> {
                     width: double.infinity,
                     child: ListWheelScrollViewX(
                       itemExtent: 340,
-                      diameterRatio: 3,
+                      diameterRatio: 5,
                       scrollDirection: Axis.horizontal,
                       children: _mainItems,
                     ),

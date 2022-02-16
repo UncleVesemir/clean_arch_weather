@@ -56,11 +56,13 @@ class MainItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(width: 10),
               _rowItem('Wind', '4 m/s'),
               _verticalDivider(),
               _rowItem('Temp', '30°C'),
               _verticalDivider(),
               _rowItem('Humid.', '25%'),
+              const SizedBox(width: 10),
             ],
           ),
         ],

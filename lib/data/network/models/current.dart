@@ -1,23 +1,28 @@
-import 'package:clean_arch_weather/data/network/entities/temperature.dart';
-import 'package:clean_arch_weather/data/network/entities/weather_element.dart';
-import 'package:clean_arch_weather/domain/model/daily.dart';
+import 'package:clean_arch_weather/data/network/models/weather_element.dart';
+import 'package:clean_arch_weather/domain/entities/current.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'daily.g.dart';
+part 'current.g.dart';
 
 @JsonSerializable()
-class DailyModel extends Daily {
+class CurrentModel extends Current {
   // @JsonKey(name: 'dt')
   // final int dt;
 
   // @JsonKey(name: 'temp')
-  // final TemperatureModel temp;
+  // final double temp;
+
+  // @JsonKey(name: 'feels_like')
+  // final double feelsLike;
 
   // @JsonKey(name: 'pressure')
   // final int pressure;
 
   // @JsonKey(name: 'humidity')
   // final int humidity;
+
+  // @JsonKey(name: 'visibility')
+  // final int visibility;
 
   // @JsonKey(name: 'wind_speed')
   // final double windSpeed;
@@ -28,26 +33,30 @@ class DailyModel extends Daily {
   // @JsonKey(name: 'weather')
   // final List<WeatherElementModel> weather;
 
-  DailyModel({
+  const CurrentModel({
     required int dt,
-    required TemperatureModel temp,
+    required double temp,
+    required double feelsLike,
     required int pressure,
     required int humidity,
+    required int visibility,
     required double windSpeed,
     required int windDeg,
     required List<WeatherElementModel> weather,
   }) : super(
           dt: dt,
           temp: temp,
+          feelsLike: feelsLike,
           pressure: pressure,
           humidity: humidity,
+          visibility: visibility,
           windSpeed: windSpeed,
           windDeg: windDeg,
           weather: weather,
         );
 
-  factory DailyModel.fromJson(Map<String, dynamic> json) =>
-      _$DailyModelFromJson(json);
+  factory CurrentModel.fromJson(Map<String, dynamic> json) =>
+      _$CurrentModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DailyModelToJson(this);
+  Map<String, dynamic> toJson() => _$CurrentModelToJson(this);
 }
