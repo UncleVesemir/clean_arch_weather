@@ -20,7 +20,7 @@ class WeatherRepositoryImpl implements WeatherRepository {
           await _weatherApiService.getWeather(42, 32, kAppId, 'en', 'metric');
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        return DataSucces(httpResponse.data as Weather);
+        return DataSuccess(httpResponse.data as Weather);
       }
       return DataFailed(
         DioError(

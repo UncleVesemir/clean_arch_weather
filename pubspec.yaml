@@ -17,6 +17,11 @@ dependencies:
   json_annotation: any
   dio: ^4.0.4
 
+#LOGIC
+  flutter_hooks: ^0.18.2+1
+  flutter_bloc: ^8.0.1
+  get_it: ^7.2.0
+
 #DESIGN
   bottom_navy_bar: ^6.0.0
   hexcolor: ^2.0.6  

@@ -1,13 +1,13 @@
 import 'dart:developer';
 
-import 'package:clean_arch_weather/const.dart';
+import 'package:clean_arch_weather/styles_const.dart';
 import 'package:clean_arch_weather/core/utils/constants.dart';
 import 'package:clean_arch_weather/data/gps/gps_location.dart';
 import 'package:clean_arch_weather/data/network/api_service.dart';
-import 'package:clean_arch_weather/overrides.dart';
-import 'package:clean_arch_weather/presentation/city_item.dart';
-import 'package:clean_arch_weather/presentation/main_weather_item.dart';
-import 'package:clean_arch_weather/presentation/weather_item.dart';
+import 'package:clean_arch_weather/presentation/widgets/overrides.dart';
+import 'package:clean_arch_weather/presentation/widgets/city_item.dart';
+import 'package:clean_arch_weather/presentation/widgets/main_weather_item.dart';
+import 'package:clean_arch_weather/presentation/widgets/weather_item.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
@@ -338,6 +338,7 @@ class _HomeState extends State<Home> {
               const SizedBox(height: 15),
               const CityItem(
                   city: 'Minsk', windSpeed: 10, temperature: 30, humidity: 88),
+              const SizedBox(height: 25),
             ],
           ),
         ),

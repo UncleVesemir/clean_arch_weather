@@ -1,4 +1,4 @@
-import 'package:clean_arch_weather/const.dart';
+import 'package:clean_arch_weather/styles_const.dart';
 import 'package:flutter/material.dart';
 
 class CityItem extends StatelessWidget {
