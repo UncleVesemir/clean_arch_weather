@@ -1,19 +1,13 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'daily.dart';
 
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
 DailyModel _$DailyModelFromJson(Map<String, dynamic> json) => DailyModel(
-      json['dt'] as int,
-      TemperatureModel.fromJson(json['temp'] as Map<String, dynamic>),
-      json['pressure'] as int,
-      json['humidity'] as int,
-      (json['wind_speed'] as num).toDouble(),
-      json['wind_deg'] as int,
-      (json['weather'] as List<dynamic>)
+      dt: json['dt'] as int,
+      temp: TemperatureModel.fromJson(json['temp'] as Map<String, dynamic>),
+      pressure: json['pressure'] as int,
+      humidity: json['humidity'] as int,
+      windSpeed: (json['wind_speed'] as num).toDouble(),
+      windDeg: json['wind_deg'] as int,
+      weather: (json['weather'] as List<dynamic>)
           .map((e) => WeatherElementModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );

@@ -1,21 +1,15 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'current.dart';
 
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
 CurrentModel _$CurrentModelFromJson(Map<String, dynamic> json) => CurrentModel(
-      json['dt'] as int,
-      (json['temp'] as num).toDouble(),
-      (json['feels_like'] as num).toDouble(),
-      json['pressure'] as int,
-      json['humidity'] as int,
-      json['visibility'] as int,
-      (json['wind_speed'] as num).toDouble(),
-      json['wind_deg'] as int,
-      (json['weather'] as List<dynamic>)
+      dt: json['dt'] as int,
+      temp: (json['temp'] as num).toDouble(),
+      feelsLike: (json['feels_like'] as num).toDouble(),
+      pressure: json['pressure'] as int,
+      humidity: json['humidity'] as int,
+      visibility: json['visibility'] as int,
+      windSpeed: (json['wind_speed'] as num).toDouble(),
+      windDeg: json['wind_deg'] as int,
+      weather: (json['weather'] as List<dynamic>)
           .map((e) => WeatherElementModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );

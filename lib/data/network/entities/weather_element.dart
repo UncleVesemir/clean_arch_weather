@@ -1,19 +1,28 @@
+import 'package:clean_arch_weather/domain/model/weather_element.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'weather_element.g.dart';
 
 @JsonSerializable()
-class WeatherElementModel {
-  @JsonKey(name: 'id')
-  final int id;
+class WeatherElementModel extends WeatherElement {
+  // @JsonKey(name: 'id')
+  // final int id;
 
-  @JsonKey(name: 'main')
-  final String main;
+  // @JsonKey(name: 'main')
+  // final String main;
 
-  @JsonKey(name: 'description')
-  final String description;
+  // @JsonKey(name: 'description')
+  // final String description;
 
-  WeatherElementModel(this.id, this.main, this.description);
+  const WeatherElementModel({
+    required int id,
+    required String main,
+    required String description,
+  }) : super(
+          id: id,
+          main: main,
+          description: description,
+        );
 
   factory WeatherElementModel.fromJson(Map<String, dynamic> json) =>
       _$WeatherElementModelFromJson(json);

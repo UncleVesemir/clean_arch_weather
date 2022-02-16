@@ -1,4 +1,4 @@
-import 'package:clean_arch_weather/domain/model/temperature.dart';
+import 'package:clean_arch_weather/data/network/entities/temperature.dart';
 import 'package:clean_arch_weather/domain/model/weather_element.dart';
 import 'package:equatable/equatable.dart';
 
@@ -14,7 +14,7 @@ class Daily extends Equatable {
   });
 
   final int dt;
-  final Temperature temp;
+  final TemperatureModel temp;
   final int pressure;
   final int humidity;
   final double windSpeed;

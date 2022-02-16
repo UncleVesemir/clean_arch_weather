@@ -1,35 +1,43 @@
+import 'package:clean_arch_weather/domain/model/temperature.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'temperature.g.dart';
 
 @JsonSerializable()
-class TemperatureModel {
-  @JsonKey(name: 'day')
-  final double day;
+class TemperatureModel extends Temperature {
+  // @JsonKey(name: 'day')
+  // final double day;
 
-  @JsonKey(name: 'min')
-  final double min;
+  // @JsonKey(name: 'min')
+  // final double min;
 
-  @JsonKey(name: 'max')
-  final double max;
+  // @JsonKey(name: 'max')
+  // final double max;
 
-  @JsonKey(name: 'night')
-  final double night;
+  // @JsonKey(name: 'night')
+  // final double night;
 
-  @JsonKey(name: 'eve')
-  final double eve;
+  // @JsonKey(name: 'eve')
+  // final double eve;
 
-  @JsonKey(name: 'morn')
-  final double morn;
+  // @JsonKey(name: 'morn')
+  // final double morn;
 
-  TemperatureModel(
-    this.day,
-    this.min,
-    this.max,
-    this.night,
-    this.eve,
-    this.morn,
-  );
+  const TemperatureModel({
+    required double day,
+    required double min,
+    required double max,
+    required double night,
+    required double eve,
+    required double morn,
+  }) : super(
+          day: day,
+          min: min,
+          max: max,
+          night: night,
+          eve: eve,
+          morn: morn,
+        );
 
   factory TemperatureModel.fromJson(Map<String, dynamic> json) =>
       _$TemperatureModelFromJson(json);

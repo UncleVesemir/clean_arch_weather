@@ -258,7 +258,7 @@ class _HomeState extends State<Home> {
       children: [
         SizedBox(
           width: double.infinity,
-          height: 80,
+          height: 56,
           child: ListWheelScrollViewX(
             scrollDirection: Axis.horizontal,
             itemExtent: 150,
@@ -270,14 +270,18 @@ class _HomeState extends State<Home> {
             children: [
               _paramTopItem('Temperature', 0),
               _paramTopItem('Wind', 1),
-              _paramTopItem('Humidity', 2),
+              _paramTopItem('Wind Speed', 2),
+              _paramTopItem('Wind Deg', 3),
+              _paramTopItem('Humidity', 4),
             ],
           ),
         ),
+        const SizedBox(height: 25),
         SizedBox(
           height: 200,
           child: LineChart(avgData()),
         ),
+        const SizedBox(height: 25),
         SizedBox(
           width: double.infinity,
           height: 80,
@@ -301,28 +305,41 @@ class _HomeState extends State<Home> {
           ),
         ),
         const SizedBox(height: 25),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text(
-              'Other City',
-              style: AppTextStyles.bigText,
-            ),
-            Text(
-              'View All',
-              style: AppTextStyles.mediumText,
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text(
+                    'Other City',
+                    style: AppTextStyles.bigText,
+                  ),
+                  Text(
+                    'View All',
+                    style: AppTextStyles.mediumText,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              const CityItem(
+                  city: 'Polatsk',
+                  windSpeed: 23,
+                  temperature: 23,
+                  humidity: 78),
+              const SizedBox(height: 15),
+              const CityItem(
+                  city: 'Novopolatsk',
+                  windSpeed: 18,
+                  temperature: 26,
+                  humidity: 83),
+              const SizedBox(height: 15),
+              const CityItem(
+                  city: 'Minsk', windSpeed: 10, temperature: 30, humidity: 88),
+            ],
+          ),
         ),
-        const SizedBox(height: 20),
-        const CityItem(
-            city: 'Polatsk', windSpeed: 23, temperature: 23, humidity: 78),
-        const SizedBox(height: 15),
-        const CityItem(
-            city: 'Novopolatsk', windSpeed: 18, temperature: 26, humidity: 83),
-        const SizedBox(height: 15),
-        const CityItem(
-            city: 'Minsk', windSpeed: 10, temperature: 30, humidity: 88),
       ],
     );
   }
@@ -330,44 +347,55 @@ class _HomeState extends State<Home> {
   Opacity _buildBottomSheetPageClosed() {
     return Opacity(
       opacity: 1 - _percent.abs() * 6,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Today',
-                style: AppTextStyles.lowText,
-              ),
-              Row(
-                children: const [
-                  Text(
-                    'Next 7 Days',
-                    style: AppTextStyles.lowText,
-                  ),
-                  SizedBox(width: 10),
-                  Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 12,
-                    color: Colors.white,
-                  )
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              WeatherItem(),
-              WeatherItem(),
-              WeatherItem(),
-              WeatherItem(),
-            ],
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.only(left: 24, right: 24, top: 0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Today',
+                  style: AppTextStyles.lowText,
+                ),
+                Row(
+                  children: const [
+                    Text(
+                      'Next 7 Days',
+                      style: AppTextStyles.lowText,
+                    ),
+                    SizedBox(width: 10),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 12,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                WeatherItem(),
+                WeatherItem(),
+                WeatherItem(),
+                WeatherItem(),
+              ],
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  void _handleExtend(DraggableScrollableNotification notification) async {
+    await Future.delayed(const Duration(milliseconds: 200)).then((value) {
+      setState(() {
+        _percent = -2 * notification.extent + 0.8;
+      });
+    });
   }
 
   NotificationListener<DraggableScrollableNotification> _buildSheet() {
@@ -376,12 +404,15 @@ class _HomeState extends State<Home> {
         setState(() {
           _percent = -2 * notification.extent + 0.8;
         });
+        // _handleExtend(notification);
         return true;
       },
       child: DraggableScrollableSheet(
         minChildSize: 0.4,
         initialChildSize: 0.4,
-        maxChildSize: 0.9,
+        maxChildSize: 0.88,
+        // snap: true,
+        // snapSizes: [0.58],
         builder: (context, scrollController) {
           return Container(
             decoration: BoxDecoration(
@@ -390,16 +421,19 @@ class _HomeState extends State<Home> {
                   topLeft: Radius.circular(45), topRight: Radius.circular(45)),
             ),
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 28, right: 28, top: 40, bottom: 15),
+              padding: const EdgeInsets.only(top: 40),
               child: ScrollConfiguration(
                 behavior: DisableGlowingEffect(),
-                child: ListView(
-                  physics: const ClampingScrollPhysics(),
-                  controller: scrollController,
-                  children: _percent > -0.15
-                      ? [_buildBottomSheetPageClosed()]
-                      : [_buildBottomSheetPageOpened()],
+                child: MediaQuery.removePadding(
+                  context: context,
+                  child: ListView(
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    controller: scrollController,
+                    children: _percent > -0.15
+                        ? [_buildBottomSheetPageClosed()]
+                        : [_buildBottomSheetPageOpened()],
+                  ),
                 ),
               ),
             ),
@@ -438,8 +472,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // getLocation();
-    // printWeather();
     // getWeather();
     return Scaffold(
       extendBody: true,

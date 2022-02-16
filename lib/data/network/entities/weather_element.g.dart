@@ -1,16 +1,10 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'weather_element.dart';
-
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
 
 WeatherElementModel _$WeatherElementModelFromJson(Map<String, dynamic> json) =>
     WeatherElementModel(
-      json['id'] as int,
-      json['main'] as String,
-      json['description'] as String,
+      id: json['id'] as int,
+      main: json['main'] as String,
+      description: json['description'] as String,
     );
 
 Map<String, dynamic> _$WeatherElementModelToJson(

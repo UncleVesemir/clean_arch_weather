@@ -17,7 +17,7 @@ dependencies:
   json_annotation: any
   dio: ^4.0.4
 
-#GPS
+#DESIGN
   bottom_navy_bar: ^6.0.0
   hexcolor: ^2.0.6  
   fl_chart: ^0.41.0
