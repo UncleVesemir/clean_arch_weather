@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:clean_arch_weather/presentation/blocs/bloc/remote_weather_bloc.dart';
 import 'package:clean_arch_weather/styles_const.dart';
 import 'package:clean_arch_weather/core/utils/constants.dart';
 import 'package:clean_arch_weather/data/gps/gps_location.dart';
@@ -8,11 +9,14 @@ import 'package:clean_arch_weather/presentation/widgets/overrides.dart';
 import 'package:clean_arch_weather/presentation/widgets/city_item.dart';
 import 'package:clean_arch_weather/presentation/widgets/main_weather_item.dart';
 import 'package:clean_arch_weather/presentation/widgets/weather_item.dart';
+import 'package:clean_arch_weather/utils.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_glow/flutter_glow.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -26,6 +30,9 @@ class _HomeState extends State<Home> {
   int _currentTopParamIndex = 0;
   int _currentBottomParamIndex = 0;
   double _percent = 0.0;
+
+  int _selectedItem = 0;
+  final int _today = DateTime.now().day;
 
   final List<BottomNavyBarItem> _bottomBarItems = [
     BottomNavyBarItem(
@@ -128,7 +135,7 @@ class _HomeState extends State<Home> {
     AppColors.lowMainColor.withOpacity(0.1),
   ];
 
-  LineChartData avgData() {
+  LineChartData _data(RemoteWeatherState state) {
     return LineChartData(
       lineTouchData: LineTouchData(
         enabled: true,
@@ -254,7 +261,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Column _buildBottomSheetPageOpened() {
+  Column _buildBottomSheetPageOpened(RemoteWeatherState state) {
     return Column(
       children: [
         SizedBox(
@@ -280,7 +287,7 @@ class _HomeState extends State<Home> {
         const SizedBox(height: 25),
         SizedBox(
           height: 200,
-          child: LineChart(avgData()),
+          child: LineChart(_data(state)),
         ),
         const SizedBox(height: 25),
         SizedBox(
@@ -346,75 +353,91 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Opacity _buildBottomSheetPageClosed() {
+  List<WeatherItem> _initClosedSheet(RemoteWeatherState state) {
+    List<WeatherItem> _items = [];
+    for (var i = 0; i < 8; i++) {
+      var time = DateTime.fromMillisecondsSinceEpoch(
+          1000 * state.weather!.hourly[i].dt);
+      var minutes = DateTime.fromMillisecondsSinceEpoch(
+              1000 * state.weather!.hourly[i].dt)
+          .minute;
+      var minutesToStr = '';
+      if (minutes < 10) {
+        minutesToStr = '0$minutes';
+      } else {
+        minutesToStr = minutes.toString();
+      }
+      _items.add(WeatherItem(
+        image: state.weather!.hourly[i].weather[0].image,
+        temp: state.weather!.hourly[i].temp,
+        time:
+            '${DateTime.fromMillisecondsSinceEpoch(1000 * state.weather!.hourly[i].dt).hour}:$minutesToStr',
+      ));
+      i++;
+    }
+    return _items;
+  }
+
+  Opacity _buildBottomSheetPageClosed(RemoteWeatherState state) {
     return Opacity(
       opacity: 1 - _percent.abs() * 6,
       child: Padding(
         padding: const EdgeInsets.only(left: 24, right: 24, top: 0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Today',
-                  style: AppTextStyles.lowText,
-                ),
-                Row(
-                  children: const [
-                    Text(
-                      'Next 7 Days',
-                      style: AppTextStyles.lowText,
-                    ),
-                    SizedBox(width: 10),
-                    Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 12,
-                      color: Colors.white,
-                    )
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                WeatherItem(),
-                WeatherItem(),
-                WeatherItem(),
-                WeatherItem(),
-              ],
-            ),
-          ],
-        ),
+        child: state is RemoteWeatherLoading
+            ? SpinKitWave(
+                color: AppColors.lowDarkColor,
+              )
+            : state is RemoteWeatherDone
+                ? Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Today',
+                            style: AppTextStyles.lowText,
+                          ),
+                          Row(
+                            children: const [
+                              Text(
+                                'Next 7 Days',
+                                style: AppTextStyles.lowText,
+                              ),
+                              SizedBox(width: 10),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 12,
+                                color: Colors.white,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: _initClosedSheet(state),
+                      ),
+                    ],
+                  )
+                : Text(state.error!.message),
       ),
     );
   }
 
-  void _handleExtend(DraggableScrollableNotification notification) async {
-    await Future.delayed(const Duration(milliseconds: 200)).then((value) {
-      setState(() {
-        _percent = -2 * notification.extent + 0.8;
-      });
-    });
-  }
-
-  NotificationListener<DraggableScrollableNotification> _buildSheet() {
+  NotificationListener<DraggableScrollableNotification> _buildSheet(
+      RemoteWeatherState state) {
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
         setState(() {
           _percent = -2 * notification.extent + 0.8;
         });
-        // _handleExtend(notification);
         return true;
       },
       child: DraggableScrollableSheet(
         minChildSize: 0.4,
         initialChildSize: 0.4,
         maxChildSize: 0.88,
-        // snap: true,
-        // snapSizes: [0.58],
         builder: (context, scrollController) {
           return Container(
             decoration: BoxDecoration(
@@ -433,8 +456,8 @@ class _HomeState extends State<Home> {
                     physics: const ClampingScrollPhysics(),
                     controller: scrollController,
                     children: _percent > -0.15
-                        ? [_buildBottomSheetPageClosed()]
-                        : [_buildBottomSheetPageOpened()],
+                        ? [_buildBottomSheetPageClosed(state)]
+                        : [_buildBottomSheetPageOpened(state)],
                   ),
                 ),
               ),
@@ -445,88 +468,123 @@ class _HomeState extends State<Home> {
     );
   }
 
-  final List<Widget> _mainItems = const [
-    MainItem(),
-    MainItem(),
-    MainItem(),
-    MainItem(),
-    MainItem(),
-  ];
-
   void getLocation() async {
     var data = await GetLocation.getPermission();
     print(data ?? 'null');
   }
 
-  void getWeather() async {
-    WeatherApiService apiService = WeatherApiService(dio.Dio());
+  List<MainItem> _initMainList(RemoteWeatherState state) {
+    List<MainItem> _items = [];
+    for (var i = 0; i < state.weather!.daily.length; i++) {
+      _items.add(MainItem(
+        image: state.weather!.daily[i].weather[0].image,
+        description: state.weather!.daily[i].weather[0].description.toString(),
+        humidity: state.weather!.daily[i].humidity,
+        temp: state.weather!.daily[i].temp.day,
+        windSpeed: state.weather!.daily[i].windSpeed,
+      ));
+    }
+    return _items;
+  }
 
-    final response = await apiService.getWeather(
-      32,
-      53,
-      kAppId,
-      'en',
-      'metric',
+  void _onMainItemChange(int item) => setState(
+        () => _selectedItem = item,
+      );
+
+  Text _buildDate(RemoteWeatherState state) {
+    var date = DateTime.fromMillisecondsSinceEpoch(
+        1000 * state.weather!.daily[_selectedItem].dt);
+    var day = DateTime.fromMillisecondsSinceEpoch(
+            1000 * state.weather!.daily[_selectedItem].dt)
+        .day;
+    var month = Utils.getMonthName(DateTime.fromMillisecondsSinceEpoch(
+            1000 * state.weather!.daily[_selectedItem].dt)
+        .month);
+    bool isToday = false;
+    bool isTomorrow = false;
+    if (_today == day) isToday = true;
+    if (day - _today == 1) isTomorrow = true;
+    return Text(
+      isToday
+          ? 'Today, $day $month'
+          : isTomorrow
+              ? 'Tomorrow $day $month'
+              : '${Utils.getWeekdayName(date.weekday)}, $day $month',
+      style: AppTextStyles.lowDarkS24W400Normal,
     );
+  }
 
-    print(response.data.daily[0]);
+  Widget _buildBody(RemoteWeatherState state) {
+    return SafeArea(
+      child: Stack(
+        children: <Widget>[
+          state is RemoteWeatherLoading
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 200),
+                    SpinKitWave(
+                      color: AppColors.darkColor,
+                      itemCount: 6,
+                    ),
+                  ],
+                )
+              : state is RemoteWeatherDone
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25.0, top: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildDate(state),
+                              const SizedBox(height: 3),
+                              Text('Polotsk', style: AppTextStyles.cityName),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          height: 370,
+                          width: double.infinity,
+                          child: ListWheelScrollViewX(
+                            itemExtent: 340,
+                            diameterRatio: 5,
+                            scrollDirection: Axis.horizontal,
+                            children: _initMainList(state),
+                            onSelectedItemChanged: _onMainItemChange,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(state.error!.message),
+          _buildSheet(state),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: -5 * (1 - _percent * 80),
+            child: Opacity(
+              opacity: 1 + _percent,
+              child: _buildBottomBar(),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // getWeather();
-    return Scaffold(
-      extendBody: true,
-      body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            Container(
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25.0, top: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Today, 11 Feb',
-                          style: AppTextStyles.lowDarkS24W400Normal,
-                        ),
-                        const SizedBox(height: 3),
-                        Text('Polotsk', style: AppTextStyles.cityName),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    height: 370,
-                    width: double.infinity,
-                    child: ListWheelScrollViewX(
-                      itemExtent: 340,
-                      diameterRatio: 5,
-                      scrollDirection: Axis.horizontal,
-                      children: _mainItems,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            _buildSheet(),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: -5 * (1 - _percent * 80),
-              child: Opacity(
-                opacity: 1 + _percent,
-                child: _buildBottomBar(),
-              ),
-            ),
-          ],
-        ),
-      ),
+    // getLocation();
+    return BlocBuilder<RemoteWeatherBloc, RemoteWeatherState>(
+      builder: (context, state) {
+        return Scaffold(
+          extendBody: true,
+          body: _buildBody(state),
+        );
+      },
     );
   }
 }

@@ -1,34 +1,42 @@
 import 'package:clean_arch_weather/data/network/models/current.dart';
 import 'package:clean_arch_weather/data/network/models/daily.dart';
+import 'package:clean_arch_weather/domain/entities/current.dart';
+import 'package:clean_arch_weather/domain/entities/daily.dart';
 import 'package:clean_arch_weather/domain/entities/weather.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'weather_response.g.dart';
 
 @JsonSerializable()
-class WeatherResponse {
-  @JsonKey(name: 'lat')
-  final double lat;
+class WeatherResponse extends Weather {
+  // @JsonKey(name: 'lat')
+  // final double lat;
 
-  @JsonKey(name: 'lon')
-  final double lon;
+  // @JsonKey(name: 'lon')
+  // final double lon;
 
-  @JsonKey(name: 'current')
-  final CurrentModel current;
+  // @JsonKey(name: 'current')
+  // final CurrentModel current;
 
-  @JsonKey(name: 'hourly')
-  final List<CurrentModel> hourly;
+  // @JsonKey(name: 'hourly')
+  // final List<CurrentModel> hourly;
 
-  @JsonKey(name: 'daily')
-  final List<DailyModel> daily;
+  // @JsonKey(name: 'daily')
+  // final List<DailyModel> daily;
 
-  WeatherResponse(
-    this.lat,
-    this.lon,
-    this.current,
-    this.hourly,
-    this.daily,
-  );
+  const WeatherResponse({
+    required double lat,
+    required double lon,
+    required Current current,
+    required List<Current> hourly,
+    required List<Daily> daily,
+  }) : super(
+          lat: lat,
+          lon: lon,
+          current: current,
+          hourly: hourly,
+          daily: daily,
+        );
 
   factory WeatherResponse.fromJson(Map<String, dynamic> json) =>
       _$WeatherResponseFromJson(json);

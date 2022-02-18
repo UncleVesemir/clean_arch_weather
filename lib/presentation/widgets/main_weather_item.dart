@@ -3,7 +3,19 @@ import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:flutter/material.dart';
 
 class MainItem extends StatelessWidget {
-  const MainItem({Key? key}) : super(key: key);
+  final String image;
+  final String description;
+  final double windSpeed;
+  final double temp;
+  final int humidity;
+  const MainItem({
+    required this.image,
+    required this.description,
+    required this.humidity,
+    required this.temp,
+    required this.windSpeed,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +52,11 @@ class MainItem extends StatelessWidget {
           SizedBox(
             height: 200,
             width: 300,
-            child: Image.asset(
-              Images.moon + '31.png',
-            ),
+            // child: Image.asset(image),
           ),
           const SizedBox(height: 15),
           GradientText(
-            'Cloudy',
+            description,
             gradientDirection: GradientDirection.btt,
             colors: AppGradientColors.gradientText,
             style: AppTextStyles.bigTextDarkColor,
@@ -57,11 +67,11 @@ class MainItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(width: 10),
-              _rowItem('Wind', '4 m/s'),
+              _rowItem('Wind', '${windSpeed.toInt()} m/s'),
               _verticalDivider(),
-              _rowItem('Temp', '30°C'),
+              _rowItem('Temp', '${temp.toInt()}°C'),
               _verticalDivider(),
-              _rowItem('Humid.', '25%'),
+              _rowItem('Humid.', '${humidity.toInt()}%'),
               const SizedBox(width: 10),
             ],
           ),

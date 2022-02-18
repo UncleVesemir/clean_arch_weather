@@ -8,13 +8,13 @@ part of 'weather_response.dart';
 
 WeatherResponse _$WeatherResponseFromJson(Map<String, dynamic> json) =>
     WeatherResponse(
-      (json['lat'] as num).toDouble(),
-      (json['lon'] as num).toDouble(),
-      CurrentModel.fromJson(json['current'] as Map<String, dynamic>),
-      (json['hourly'] as List<dynamic>)
+      lat: (json['lat'] as num).toDouble(),
+      lon: (json['lon'] as num).toDouble(),
+      current: CurrentModel.fromJson(json['current'] as Map<String, dynamic>),
+      hourly: (json['hourly'] as List<dynamic>)
           .map((e) => CurrentModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      (json['daily'] as List<dynamic>)
+      daily: (json['daily'] as List<dynamic>)
           .map((e) => DailyModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );

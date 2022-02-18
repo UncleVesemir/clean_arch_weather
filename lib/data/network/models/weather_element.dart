@@ -1,4 +1,6 @@
+import 'package:clean_arch_weather/domain/entities/other.dart';
 import 'package:clean_arch_weather/domain/entities/weather_element.dart';
+import 'package:clean_arch_weather/styles_const.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'weather_element.g.dart';
@@ -16,12 +18,14 @@ class WeatherElementModel extends WeatherElement {
 
   const WeatherElementModel({
     required int id,
-    required String main,
+    required Main main,
     required String description,
+    required String image,
   }) : super(
           id: id,
           main: main,
           description: description,
+          image: image,
         );
 
   factory WeatherElementModel.fromJson(Map<String, dynamic> json) =>

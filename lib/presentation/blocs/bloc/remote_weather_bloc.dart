@@ -15,27 +15,31 @@ class RemoteWeatherBloc
   final GetWeatherUseCase _getWeatherUseCase;
 
   RemoteWeatherBloc(this._getWeatherUseCase)
-      : super(const RemoteWeatherLoading());
+      : super(const RemoteWeatherLoading()) {
+    on<RemoteWeatherEvent>((event, emit) async {
+      await _getWeather(event);
+    });
+  }
 
   Weather? weather;
 
-  @override
-  Stream<RemoteWeatherState> mapEventToState(RemoteWeatherEvent event) async* {
-    if (event is GetWeather) yield* _getWeather(event);
-  }
+  // @override
+  // Future<void> mapEventToState(RemoteWeatherEvent event) async {
+  //   if (event is GetWeather) {
+  //     _getWeather(event);
+  //   }
+  // }
 
-  Stream<RemoteWeatherState> _getWeather(RemoteWeatherEvent event) async* {
-    yield* runBlocProcess(() async* {
-      final dataState = await _getWeatherUseCase(
-          params: WeatherRequestParams(lat: 32, lon: 43));
+  Future<void> _getWeather(RemoteWeatherEvent event) async {
+    final dataState = await _getWeatherUseCase(
+        params: WeatherRequestParams(lat: 32, lon: 43));
 
-      if (dataState is DataSuccess && dataState.data != null) {
-        final weather = dataState.data!;
-        yield RemoteWeatherDone(weather: weather);
-      }
-      if (dataState is DataFailed) {
-        yield RemoteWeatherError(dataState.error!);
-      }
-    });
+    if (dataState is DataSuccess && dataState.data != null) {
+      final weather = dataState.data!;
+      emit(RemoteWeatherDone(weather: weather));
+    }
+    if (dataState is DataFailed) {
+      emit(RemoteWeatherError(dataState.error!));
+    }
   }
 }

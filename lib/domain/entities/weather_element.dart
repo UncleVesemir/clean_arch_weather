@@ -1,3 +1,4 @@
+import 'package:clean_arch_weather/data/network/models/weather_element.dart';
 import 'package:equatable/equatable.dart';
 
 class WeatherElement extends Equatable {
@@ -5,11 +6,13 @@ class WeatherElement extends Equatable {
     required this.id,
     required this.main,
     required this.description,
+    required this.image,
   });
 
   final int id;
-  final String main;
+  final Main main;
   final String description;
+  final String image;
 
   @override
   List<Object> get props {

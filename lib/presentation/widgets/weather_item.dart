@@ -2,7 +2,15 @@ import 'package:clean_arch_weather/styles_const.dart';
 import 'package:flutter/material.dart';
 
 class WeatherItem extends StatelessWidget {
-  const WeatherItem({Key? key}) : super(key: key);
+  final String image;
+  final String time;
+  final double temp;
+  const WeatherItem({
+    required this.image,
+    required this.temp,
+    required this.time,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,15 +28,15 @@ class WeatherItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(Images.sun + '27.png'),
+              Image.asset(image),
               const SizedBox(height: 7),
-              const Text(
-                '12:00',
+              Text(
+                time,
                 style: AppTextStyles.extraLowText,
               ),
               const SizedBox(height: 3),
-              const Text(
-                '35°C',
+              Text(
+                '${temp.toInt()}°C',
                 style: AppTextStyles.mediumText,
               )
             ],

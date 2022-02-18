@@ -12,6 +12,18 @@ class EnumValues<T> {
   }
 }
 
+class EnumValuesReverse<T> {
+  Map<Enum, T> map;
+  Map<T, Enum>? reverseMap;
+
+  EnumValuesReverse(this.map);
+
+  Map<T, Enum> get reverse {
+    reverseMap ??= map.map((k, v) => MapEntry(v, k));
+    return reverseMap!;
+  }
+}
+
 enum Description {
 //THUNDERSTORM
   THUNDERSTORM_WITH_LIGHT_RAIN,
