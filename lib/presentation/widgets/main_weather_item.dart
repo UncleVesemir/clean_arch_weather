@@ -1,4 +1,5 @@
 import 'package:clean_arch_weather/styles_const.dart';
+import 'package:clean_arch_weather/utils.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:flutter/material.dart';
 
@@ -27,9 +28,10 @@ class MainItem extends StatelessWidget {
             top,
             style: AppTextStyles.lowTextDarkColor,
           ),
+          const SizedBox(height: 3),
           Text(
             bottom,
-            style: AppTextStyles.darkS20W400Normal,
+            style: AppTextStyles.darkS24W400Normal,
           ),
         ],
       );
@@ -37,45 +39,63 @@ class MainItem extends StatelessWidget {
 
     Container _verticalDivider() {
       return Container(
-        height: 30,
+        height: 40,
         width: 3,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: AppColors.lowDarkColor,
+          borderRadius: BorderRadius.circular(10),
+          color: AppColors.mainDark,
+          // gradient: LinearGradient(
+          //   colors: AppGradientColors.gradientDivider,
+          //   begin: Alignment.topCenter,
+          //   end: Alignment.bottomCenter,
+          // ),
         ),
       );
     }
 
-    return SizedBox(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 200,
-            width: 300,
-            // child: Image.asset(image),
-          ),
-          const SizedBox(height: 15),
-          GradientText(
-            description,
-            gradientDirection: GradientDirection.btt,
-            colors: AppGradientColors.gradientText,
-            style: AppTextStyles.bigTextDarkColor,
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(width: 10),
-              _rowItem('Wind', '${windSpeed.toInt()} m/s'),
-              _verticalDivider(),
-              _rowItem('Temp', '${temp.toInt()}°C'),
-              _verticalDivider(),
-              _rowItem('Humid.', '${humidity.toInt()}%'),
-              const SizedBox(width: 10),
-            ],
-          ),
-        ],
+    return Container(
+      width: 150,
+      height: 320,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(45),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 160,
+              width: 160,
+              child: Image.asset(image),
+            ),
+            const SizedBox(height: 15),
+            // GradientText(
+            //   description,
+            //   gradientDirection: GradientDirection.btt,
+            //   colors: AppGradientColors.gradientText,
+            //   style: AppTextStyles.bigTextDarkColor,
+            // ),
+            Text(
+              Utils.toUpperCase(description),
+              style: AppTextStyles.descriptionBold,
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(width: 10),
+                _rowItem('Wind', '${windSpeed.toInt()} m/s'),
+                _verticalDivider(),
+                _rowItem('Temp', '${temp.toInt()}°C'),
+                _verticalDivider(),
+                _rowItem('Humid.', '${humidity.toInt()}%'),
+                const SizedBox(width: 10),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

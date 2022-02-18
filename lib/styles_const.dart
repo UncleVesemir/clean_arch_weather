@@ -10,12 +10,34 @@ class AppColors {
   static HexColor lowTextColor = HexColor('#845AF9');
   static HexColor darkColor = HexColor('#39486E');
   static HexColor lowDarkColor = HexColor('#E8ECF4');
+
+  // static HexColor mainDark = HexColor('#1F1D36');
+  // static HexColor mainMid = HexColor('#3F3351');
+  // static HexColor mainLowMid = HexColor('#864879');
+  // static HexColor mainLow = HexColor('#E9A6A6');
+
+  static HexColor mainDark = HexColor('#041C32');
+  static HexColor mainMid = HexColor('#04293A');
+  static HexColor mainLowMid = HexColor('#064663');
+  static HexColor mainLow = HexColor('#ECB365');
 }
 
 class AppGradientColors {
   static final List<Color> gradientText = [
-    AppColors.darkColor.withOpacity(0.4),
-    AppColors.darkColor,
+    AppColors.mainDark.withOpacity(0.4),
+    AppColors.mainDark,
+  ];
+
+  static final List<Color> gradientDivider = [
+    AppColors.mainDark.withOpacity(0.4),
+    AppColors.mainDark,
+    AppColors.mainDark.withOpacity(0.4),
+  ];
+
+  static final List<Color> gradientSheet = [
+    AppColors.mainDark,
+    AppColors.mainDark,
+    AppColors.mainDark.withOpacity(0.95),
   ];
 
   static final List<Color> test = [
@@ -31,6 +53,12 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  static final TextStyle descriptionBold = TextStyle(
+    color: AppColors.mainDark,
+    fontSize: 34,
+    fontWeight: FontWeight.w800,
+  );
+
   static const TextStyle lightLowText = TextStyle(
     color: Colors.white,
     fontSize: 14,
@@ -43,12 +71,12 @@ class AppTextStyles {
   );
 
   static final TextStyle lowTextInactive = TextStyle(
-    color: AppColors.lowTextColor,
+    color: AppColors.mainLow,
     fontSize: 14,
   );
 
   static final TextStyle lowTextDarkColor = TextStyle(
-    color: AppColors.darkColor,
+    color: AppColors.mainDark,
     fontSize: 12,
   );
 
@@ -58,9 +86,9 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
-  static final TextStyle darkS20W400Normal = TextStyle(
-    color: AppColors.darkColor,
-    fontSize: 28,
+  static final TextStyle darkS24W400Normal = TextStyle(
+    color: AppColors.mainDark,
+    fontSize: 24,
     fontWeight: FontWeight.w600,
   );
 
@@ -71,7 +99,7 @@ class AppTextStyles {
   );
 
   static final TextStyle cityName = TextStyle(
-    color: AppColors.darkColor,
+    color: AppColors.mainDark,
     fontSize: 30,
     fontWeight: FontWeight.w800,
   );
@@ -83,7 +111,7 @@ class AppTextStyles {
   );
 
   static final TextStyle lowDarkS24W400Normal = TextStyle(
-    color: AppColors.darkColor.withOpacity(0.6),
+    color: AppColors.mainDark.withOpacity(0.6),
     fontSize: 24,
     fontWeight: FontWeight.w400,
   );

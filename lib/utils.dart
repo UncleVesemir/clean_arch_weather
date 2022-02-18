@@ -20,6 +20,20 @@ class Utils {
     }
   }
 
+  static String toUpperCase(String value) {
+    String result = '';
+    for (var i = 0; i < value.length; i++) {
+      if (i == 0) {
+        result += value[i].toUpperCase();
+      } else if (value[i] == ' ') {
+        result += ' ' + value[i + 1].toUpperCase();
+      } else if (value[i - 1] != ' ') {
+        result += value[i];
+      }
+    }
+    return result;
+  }
+
   static String getMonthName(int num) {
     switch (num) {
       case 1:

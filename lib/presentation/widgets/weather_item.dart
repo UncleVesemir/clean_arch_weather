@@ -17,7 +17,7 @@ class WeatherItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(22)),
-        color: AppColors.lowMainColor,
+        color: Colors.grey.withOpacity(0.1),
       ),
       height: 105,
       width: 65,
@@ -28,7 +28,7 @@ class WeatherItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(image),
+              SizedBox(width: 35, height: 35, child: Image.asset(image)),
               const SizedBox(height: 7),
               Text(
                 time,
