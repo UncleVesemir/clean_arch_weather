@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:clean_arch_weather/presentation/blocs/bloc/remote_weather_bloc.dart';
 import 'package:clean_arch_weather/presentation/enums/params.dart';
+import 'package:clean_arch_weather/presentation/enums/period.dart';
 import 'package:clean_arch_weather/styles_const.dart';
 import 'package:clean_arch_weather/core/utils/constants.dart';
 import 'package:clean_arch_weather/data/gps/gps_location.dart';
@@ -41,6 +42,7 @@ class _HomeState extends State<Home> {
   bool _dataLoading = false;
 
   Params _selectedParam = Params.temperature;
+  Period _selectedPeriod = Period.twoDays;
 
   int _selectedItem = 0;
   final int _today = DateTime.now().day;
@@ -89,8 +91,8 @@ class _HomeState extends State<Home> {
 
   Container _paramBottomItem(String name, int index) {
     return Container(
-      width: 100,
       height: 30,
+      width: 220,
       decoration: index == _currentBottomParamIndex
           ? BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(16)),
@@ -146,30 +148,65 @@ class _HomeState extends State<Home> {
     AppColors.lowMainColor.withOpacity(0.1),
   ];
 
-  List<FlSpot> _initData(RemoteWeatherState state) {
-    _dataLoading = true;
+  void _initChart(RemoteWeatherState state) {
+    setState(() {
+      _dataLoading = true;
 
-    switch (_selectedParam) {
-      case Params.temperature:
-        {
-          return _initTemp(state);
-        }
-      case Params.windSpeed:
-        {
-          return _initWindSpeed(state);
-        }
-      case Params.windDeg:
-        {
-          return _initWindDeg(state);
-        }
-      case Params.humidity:
-        {
-          return _initHumidity(state);
-        }
+      _graphMaxX = 0;
+      _graphMaxY = 0;
+      _graphMinX = 0;
+      _graphMinY = 0;
+
+      _initData(state);
+
+      _dataLoading = false;
+    });
+  }
+
+  List<FlSpot> _initData(RemoteWeatherState state) {
+    print(_selectedPeriod);
+    if (_selectedPeriod == Period.twoDays) {
+      switch (_selectedParam) {
+        case Params.temperature:
+          {
+            return _initTempHourly(state);
+          }
+        case Params.windSpeed:
+          {
+            return _initWindSpeedHourly(state);
+          }
+        case Params.windDeg:
+          {
+            return _initWindDegHourly(state);
+          }
+        case Params.humidity:
+          {
+            return _initHumidityHourly(state);
+          }
+      }
+    } else {
+      switch (_selectedParam) {
+        case Params.temperature:
+          {
+            return _initTempDaily(state);
+          }
+        case Params.windSpeed:
+          {
+            return _initWindSpeedDaily(state);
+          }
+        case Params.windDeg:
+          {
+            return _initWindDegDaily(state);
+          }
+        case Params.humidity:
+          {
+            return _initHumidityDaily(state);
+          }
+      }
     }
   }
 
-  List<FlSpot> _initTemp(RemoteWeatherState state) {
+  List<FlSpot> _initTempHourly(RemoteWeatherState state) {
     List<FlSpot> _data = [];
     _graphMinX = state.weather!.hourly[0].dt.toDouble();
     _graphMaxX = state.weather!.hourly.last.dt.toDouble();
@@ -182,12 +219,26 @@ class _HomeState extends State<Home> {
       _data.add(FlSpot(item.dt.toDouble(), item.temp));
     }
 
-    _dataLoading = false;
+    return _data;
+  }
+
+  List<FlSpot> _initTempDaily(RemoteWeatherState state) {
+    List<FlSpot> _data = [];
+    _graphMinX = state.weather!.daily[0].dt.toDouble();
+    _graphMaxX = state.weather!.daily.last.dt.toDouble();
+    _graphMinY = state.weather!.daily[0].temp.day;
+    _graphMaxY = 0;
+    for (var item in state.weather!.daily) {
+      if (item.temp.day > _graphMaxY) _graphMaxY = item.temp.day;
+      if (item.temp.day < _graphMinY) _graphMinY = item.temp.day;
+
+      _data.add(FlSpot(item.dt.toDouble(), item.temp.day));
+    }
 
     return _data;
   }
 
-  List<FlSpot> _initWindSpeed(RemoteWeatherState state) {
+  List<FlSpot> _initWindSpeedHourly(RemoteWeatherState state) {
     List<FlSpot> _data = [];
     _graphMinX = state.weather!.hourly[0].dt.toDouble();
     _graphMaxX = state.weather!.hourly.last.dt.toDouble();
@@ -200,12 +251,26 @@ class _HomeState extends State<Home> {
       _data.add(FlSpot(item.dt.toDouble(), item.windSpeed));
     }
 
-    _dataLoading = false;
+    return _data;
+  }
+
+  List<FlSpot> _initWindSpeedDaily(RemoteWeatherState state) {
+    List<FlSpot> _data = [];
+    _graphMinX = state.weather!.daily[0].dt.toDouble();
+    _graphMaxX = state.weather!.daily.last.dt.toDouble();
+    _graphMinY = state.weather!.daily[0].windSpeed;
+    _graphMaxY = 0;
+    for (var item in state.weather!.daily) {
+      if (item.windSpeed > _graphMaxY) _graphMaxY = item.windSpeed;
+      if (item.windSpeed < _graphMinY) _graphMinY = item.windSpeed;
+
+      _data.add(FlSpot(item.dt.toDouble(), item.windSpeed));
+    }
 
     return _data;
   }
 
-  List<FlSpot> _initWindDeg(RemoteWeatherState state) {
+  List<FlSpot> _initWindDegHourly(RemoteWeatherState state) {
     List<FlSpot> _data = [];
     _graphMinX = state.weather!.hourly[0].dt.toDouble();
     _graphMaxX = state.weather!.hourly.last.dt.toDouble();
@@ -218,12 +283,26 @@ class _HomeState extends State<Home> {
       _data.add(FlSpot(item.dt.toDouble(), item.windDeg.toDouble()));
     }
 
-    _dataLoading = false;
+    return _data;
+  }
+
+  List<FlSpot> _initWindDegDaily(RemoteWeatherState state) {
+    List<FlSpot> _data = [];
+    _graphMinX = state.weather!.daily[0].dt.toDouble();
+    _graphMaxX = state.weather!.daily.last.dt.toDouble();
+    _graphMinY = state.weather!.daily[0].windDeg.toDouble();
+    _graphMaxY = 0;
+    for (var item in state.weather!.daily) {
+      if (item.windDeg > _graphMaxY) _graphMaxY = item.windDeg.toDouble();
+      if (item.windDeg < _graphMinY) _graphMinY = item.windDeg.toDouble();
+
+      _data.add(FlSpot(item.dt.toDouble(), item.windDeg.toDouble()));
+    }
 
     return _data;
   }
 
-  List<FlSpot> _initHumidity(RemoteWeatherState state) {
+  List<FlSpot> _initHumidityHourly(RemoteWeatherState state) {
     List<FlSpot> _data = [];
     _graphMinX = state.weather!.hourly[0].dt.toDouble();
     _graphMaxX = state.weather!.hourly.last.dt.toDouble();
@@ -236,12 +315,48 @@ class _HomeState extends State<Home> {
       _data.add(FlSpot(item.dt.toDouble(), item.humidity.toDouble()));
     }
 
-    _dataLoading = false;
+    return _data;
+  }
+
+  List<FlSpot> _initHumidityDaily(RemoteWeatherState state) {
+    List<FlSpot> _data = [];
+    _graphMinX = state.weather!.daily[0].dt.toDouble();
+    _graphMaxX = state.weather!.daily.last.dt.toDouble();
+    _graphMinY = state.weather!.daily[0].humidity.toDouble();
+    _graphMaxY = 0;
+    for (var item in state.weather!.daily) {
+      if (item.humidity > _graphMaxY) _graphMaxY = item.humidity.toDouble();
+      if (item.humidity < _graphMinY) _graphMinY = item.humidity.toDouble();
+
+      _data.add(FlSpot(item.dt.toDouble(), item.humidity.toDouble()));
+    }
 
     return _data;
   }
 
+  List<LineTooltipItem> _initTooltipItems(List<LineBarSpot> line) {
+    final List<LineTooltipItem> items = [];
+    for (var element in line) {
+      items.add(
+        LineTooltipItem(
+          Utils.getFormattedTime(element.x, element.y),
+          AppTextStyles.lightLowText,
+        ),
+      );
+    }
+    return items;
+  }
+
+  FlLine _flLine(double value) {
+    return FlLine(
+      color: Colors.white.withOpacity(0.1),
+      dashArray: [9, 0, 9],
+      strokeWidth: 1,
+    );
+  }
+
   LineChartData _data(RemoteWeatherState state) {
+    var data = _initData(state);
     return LineChartData(
       lineTouchData: LineTouchData(
         enabled: true,
@@ -258,10 +373,10 @@ class _HomeState extends State<Home> {
                 getDotPainter: (FlSpot spot, double value,
                     LineChartBarData data, int value2) {
                   return FlDotCirclePainter(
-                    color: Colors.white,
-                    radius: 10,
-                    // strokeWidth: 2,
-                    // strokeColor: Colors.black,
+                    color: AppColors.mainLow,
+                    radius: 6,
+                    strokeWidth: 4,
+                    strokeColor: Colors.white,
                   );
                 },
               ),
@@ -273,20 +388,7 @@ class _HomeState extends State<Home> {
           if (event is FlLongPressStart) {}
         },
         touchTooltipData: LineTouchTooltipData(
-          getTooltipItems: (line) {
-            final List<LineTooltipItem> items = [];
-            for (var element in line) {
-              final text =
-                  '${element.x.toInt()} January, 14:00, ${element.y}°C';
-              items.add(
-                LineTooltipItem(
-                  text,
-                  AppTextStyles.lightLowText,
-                ),
-              );
-            }
-            return items;
-          },
+          getTooltipItems: _initTooltipItems,
           tooltipBgColor: Colors.grey.withOpacity(0.1),
           tooltipRoundedRadius: 30.0,
           tooltipMargin: 20,
@@ -297,20 +399,8 @@ class _HomeState extends State<Home> {
         drawHorizontalLine: true,
         drawVerticalLine: true,
         // verticalInterval: 2,
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: Colors.white.withOpacity(0.1),
-            dashArray: [9, 0, 9],
-            strokeWidth: 1,
-          );
-        },
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: Colors.white.withOpacity(0.1),
-            dashArray: [9, 0, 9],
-            strokeWidth: 1,
-          );
-        },
+        getDrawingVerticalLine: _flLine,
+        getDrawingHorizontalLine: _flLine,
       ),
       titlesData: FlTitlesData(
         show: false,
@@ -326,7 +416,7 @@ class _HomeState extends State<Home> {
       maxY: _graphMaxY,
       lineBarsData: [
         LineChartBarData(
-          spots: _initData(state),
+          spots: data,
           isCurved: true,
           shadow: Shadow(
             color: gradientColors[1].withOpacity(1),
@@ -354,13 +444,17 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _onBottomItemChanged(int value) {
+  void _onBottomItemChanged(int value, RemoteWeatherState state) {
     setState(() {
       _currentBottomParamIndex = value;
+      value == 0
+          ? _selectedPeriod = Period.twoDays
+          : _selectedPeriod = Period.week;
+      _initChart(state);
     });
   }
 
-  void _onTopItemChanged(int value) {
+  void _onTopItemChanged(int value, RemoteWeatherState state) {
     setState(() {
       _currentTopParamIndex = value;
       value == 0
@@ -372,6 +466,7 @@ class _HomeState extends State<Home> {
                   : value == 3
                       ? _selectedParam = Params.humidity
                       : Params.windSpeed;
+      _initChart(state);
     });
   }
 
@@ -387,16 +482,16 @@ class _HomeState extends State<Home> {
   Column _buildBottomSheetPageOpened(RemoteWeatherState state) {
     return Column(
       children: [
-        const SizedBox(height: 10),
+        const SizedBox(height: 15),
         _buildLine(),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         SizedBox(
           width: double.infinity,
-          height: 56,
+          height: 80,
           child: ListWheelScrollViewX(
             scrollDirection: Axis.horizontal,
             itemExtent: 150,
-            onSelectedItemChanged: _onTopItemChanged,
+            onSelectedItemChanged: (value) => _onTopItemChanged(value, state),
             children: [
               _paramTopItem('Temperature', 0),
               _paramTopItem('Wind Speed', 1),
@@ -416,19 +511,15 @@ class _HomeState extends State<Home> {
         const SizedBox(height: 25),
         SizedBox(
           width: double.infinity,
-          height: 100.0,
+          height: 80,
           child: ListWheelScrollViewX(
             scrollDirection: Axis.horizontal,
-            itemExtent: 150,
-            onSelectedItemChanged: _onBottomItemChanged,
+            itemExtent: 250,
+            onSelectedItemChanged: (value) =>
+                _onBottomItemChanged(value, state),
             children: [
-              _paramBottomItem('Monday', 0),
-              _paramBottomItem('Tuesday', 1),
-              _paramBottomItem('Wednesday', 2),
-              _paramBottomItem('Thursday', 3),
-              _paramBottomItem('Friday', 4),
-              _paramBottomItem('Saturday', 5),
-              _paramBottomItem('Sunday', 6),
+              _paramBottomItem(Utils.getDateTimePeriodHourly(state), 0),
+              _paramBottomItem(Utils.getDateTimePeriodDaily(state), 1),
             ],
           ),
         ),
@@ -542,7 +633,7 @@ class _HomeState extends State<Home> {
           : state is RemoteWeatherDone
               ? Column(
                   children: [
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 15),
                     _buildLine(),
                     const SizedBox(height: 20),
                     Opacity(
@@ -593,6 +684,7 @@ class _HomeState extends State<Home> {
         setState(() {
           _percent = -2 * notification.extent + 0.8;
         });
+        if (_percent < -0.3) _initChart(state);
         return true;
       },
       child: DraggableScrollableSheet(
