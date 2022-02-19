@@ -1,3 +1,5 @@
+import 'package:clean_arch_weather/presentation/blocs/bloc/remote_weather_bloc.dart';
+
 class Utils {
   static String getWeekdayName(int num) {
     switch (num) {
@@ -18,6 +20,36 @@ class Utils {
       default:
         return 'error';
     }
+  }
+
+  static String getFormattedTime(double x, double y) {
+    final date = DateTime.fromMillisecondsSinceEpoch(x.toInt() * 1000);
+    var minutes = date.minute;
+    var minutesToStr = '';
+    if (minutes < 10) {
+      minutesToStr = '0$minutes';
+    } else {
+      minutesToStr = minutes.toString();
+    }
+    final month = Utils.getMonthName(date.month);
+    final weekDay = Utils.getWeekdayName(date.weekday);
+    return '$month ${date.day}, $weekDay, ${date.hour}:$minutesToStr, $y°C';
+  }
+
+  static String getDateTimePeriodHourly(RemoteWeatherState state) {
+    final fD = DateTime.fromMillisecondsSinceEpoch(
+        state.weather!.hourly.first.dt.toInt() * 1000);
+    final sD = DateTime.fromMillisecondsSinceEpoch(
+        state.weather!.hourly.last.dt.toInt() * 1000);
+    return '${Utils.getMonthName(fD.month)} ${fD.day} - ${Utils.getMonthName(sD.month)} ${sD.day}';
+  }
+
+  static String getDateTimePeriodDaily(RemoteWeatherState state) {
+    final fD = DateTime.fromMillisecondsSinceEpoch(
+        state.weather!.daily.first.dt.toInt() * 1000);
+    final sD = DateTime.fromMillisecondsSinceEpoch(
+        state.weather!.daily.last.dt.toInt() * 1000);
+    return '${Utils.getMonthName(fD.month)} ${fD.day} - ${Utils.getMonthName(sD.month)} ${sD.day}';
   }
 
   static String toUpperCase(String value) {

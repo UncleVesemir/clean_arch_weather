@@ -1,0 +1,4 @@
+enum Period {
+  twoDays,
+  week,
+}
