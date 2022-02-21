@@ -1,8 +1,11 @@
 import 'dart:developer';
 
+import 'package:clean_arch_weather/domain/entities/current.dart';
+import 'package:clean_arch_weather/domain/entities/daily.dart';
 import 'package:clean_arch_weather/presentation/blocs/bloc/remote_weather_bloc.dart';
 import 'package:clean_arch_weather/presentation/enums/params.dart';
 import 'package:clean_arch_weather/presentation/enums/period.dart';
+import 'package:clean_arch_weather/presentation/widgets/radar_chart.dart';
 import 'package:clean_arch_weather/styles_const.dart';
 import 'package:clean_arch_weather/core/utils/constants.dart';
 import 'package:clean_arch_weather/data/gps/gps_location.dart';
@@ -122,6 +125,7 @@ class _HomeState extends State<Home> {
           padding:
               const EdgeInsets.only(left: 7.0, right: 7.0, top: 7.0, bottom: 7),
           child: BottomNavyBar(
+            backgroundColor: Colors.white,
             showElevation: false,
             selectedIndex: _currentPageIndex,
             itemCornerRadius: 15,
@@ -164,7 +168,6 @@ class _HomeState extends State<Home> {
   }
 
   List<FlSpot> _initData(RemoteWeatherState state) {
-    print(_selectedPeriod);
     if (_selectedPeriod == Period.twoDays) {
       switch (_selectedParam) {
         case Params.temperature:
@@ -444,6 +447,47 @@ class _HomeState extends State<Home> {
     );
   }
 
+  List<RadarEntry>? _initWindDegData(RemoteWeatherState state) {
+    List<double> entries = [0, 0, 0, 0, 0, 0, 0, 0];
+    if (_selectedPeriod == Period.twoDays) {
+      List<Current> data;
+      data = state.weather!.hourly;
+      for (var i in data) {
+        if (i.windDeg > 22.5 && i.windDeg <= 67.5) entries[1]++;
+        if (i.windDeg > 67.5 && i.windDeg <= 112.5) entries[2]++;
+        if (i.windDeg > 112.5 && i.windDeg <= 157.5) entries[3]++;
+        if (i.windDeg > 157.5 && i.windDeg <= 202.5) entries[4]++;
+        if (i.windDeg > 202.5 && i.windDeg <= 247.5) entries[5]++;
+        if (i.windDeg > 247.5 && i.windDeg <= 292.5) entries[6]++;
+        if (i.windDeg > 292.5 && i.windDeg <= 337.5) entries[7]++;
+        if (i.windDeg > 337.5 || i.windDeg <= 22.5) entries[0]++;
+      }
+      List<RadarEntry> result = [];
+      for (var i = 0; i < 8; i++) {
+        result.add(RadarEntry(value: entries[i]));
+      }
+      return result;
+    } else {
+      List<Daily> data;
+      data = state.weather!.daily;
+      for (var i in data) {
+        if (i.windDeg > 22.5 && i.windDeg <= 67.5) entries[1]++;
+        if (i.windDeg > 67.5 && i.windDeg <= 112.5) entries[2]++;
+        if (i.windDeg > 112.5 && i.windDeg <= 157.5) entries[3]++;
+        if (i.windDeg > 157.5 && i.windDeg <= 202.5) entries[4]++;
+        if (i.windDeg > 202.5 && i.windDeg <= 247.5) entries[5]++;
+        if (i.windDeg > 247.5 && i.windDeg <= 292.5) entries[6]++;
+        if (i.windDeg > 292.5 && i.windDeg <= 337.5) entries[7]++;
+        if (i.windDeg > 337.5 || i.windDeg <= 22.5) entries[0]++;
+      }
+      List<RadarEntry> result = [];
+      for (var i = 0; i < 8; i++) {
+        result.add(RadarEntry(value: entries[i]));
+      }
+      return result;
+    }
+  }
+
   void _onBottomItemChanged(int value, RemoteWeatherState state) {
     setState(() {
       _currentBottomParamIndex = value;
@@ -486,7 +530,7 @@ class _HomeState extends State<Home> {
         _buildLine(),
         const SizedBox(height: 20),
         SizedBox(
-          width: double.infinity,
+          width: 320,
           height: 80,
           child: ListWheelScrollViewX(
             scrollDirection: Axis.horizontal,
@@ -502,15 +546,21 @@ class _HomeState extends State<Home> {
         ),
         const SizedBox(height: 25),
         SizedBox(
-          width: double.infinity,
-          height: 200.0,
+          // width: double.infinity,
+          width: 320.0,
+          height: 250.0,
           child: _dataLoading
               ? SpinKitWave(color: AppColors.mainLow)
-              : LineChart(_data(state)),
+              : _currentTopParamIndex != 2
+                  ? LineChart(
+                      _data(state),
+                      swapAnimationDuration: const Duration(milliseconds: 15),
+                    )
+                  : AppRadarChart(data: _initWindDegData(state)),
         ),
         const SizedBox(height: 25),
         SizedBox(
-          width: double.infinity,
+          width: 320,
           height: 80,
           child: ListWheelScrollViewX(
             scrollDirection: Axis.horizontal,
@@ -569,9 +619,7 @@ class _HomeState extends State<Home> {
     for (var i = 0; i < 8; i++) {
       var time = DateTime.fromMillisecondsSinceEpoch(
           1000 * state.weather!.hourly[i].dt);
-      var minutes = DateTime.fromMillisecondsSinceEpoch(
-              1000 * state.weather!.hourly[i].dt)
-          .minute;
+      var minutes = time.minute;
       var minutesToStr = '';
       if (minutes < 10) {
         minutesToStr = '0$minutes';
@@ -581,8 +629,7 @@ class _HomeState extends State<Home> {
       _items.add(WeatherItem(
         image: state.weather!.hourly[i].weather[0].image,
         temp: state.weather!.hourly[i].temp,
-        time:
-            '${DateTime.fromMillisecondsSinceEpoch(1000 * state.weather!.hourly[i].dt).hour}:$minutesToStr',
+        time: '${time.hour}:$minutesToStr',
       ));
       i++;
     }
@@ -677,6 +724,13 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void _resetChart() {
+    _currentTopParamIndex = 0;
+    _currentBottomParamIndex = 0;
+    _selectedPeriod = Period.twoDays;
+    _selectedParam = Params.temperature;
+  }
+
   NotificationListener<DraggableScrollableNotification> _buildSheet(
       RemoteWeatherState state) {
     return NotificationListener<DraggableScrollableNotification>(
@@ -685,6 +739,7 @@ class _HomeState extends State<Home> {
           _percent = -2 * notification.extent + 0.8;
         });
         if (_percent < -0.3) _initChart(state);
+        if (_percent > -0.14) _resetChart();
         return true;
       },
       child: DraggableScrollableSheet(
@@ -814,7 +869,7 @@ class _HomeState extends State<Home> {
                             height: 360,
                             width: double.infinity,
                             child: ListWheelScrollViewX(
-                              itemExtent: 370,
+                              itemExtent: 350,
                               diameterRatio: 5,
                               scrollDirection: Axis.horizontal,
                               children: _initMainList(state),
@@ -846,8 +901,10 @@ class _HomeState extends State<Home> {
       toolbarHeight: 0,
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: AppColors.mainLow,
+        systemNavigationBarColor: AppColors.mainLow,
+        systemNavigationBarDividerColor: AppColors.mainLow,
         statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-        statusBarBrightness: Brightness.light, // For iOS (dark icons)
+        statusBarBrightness: Brightness.dark, // For iOS (dark icons)
       ),
     );
   }

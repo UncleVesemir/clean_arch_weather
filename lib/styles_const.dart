@@ -59,6 +59,18 @@ class AppTextStyles {
     fontWeight: FontWeight.w800,
   );
 
+  static const TextStyle lowWhiteBold = TextStyle(
+    color: Colors.white,
+    fontSize: 14,
+    fontWeight: FontWeight.w800,
+  );
+
+  static const TextStyle midWhiteBold = TextStyle(
+    color: Colors.white,
+    fontSize: 16,
+    fontWeight: FontWeight.w800,
+  );
+
   static const TextStyle lightLowText = TextStyle(
     color: Colors.white,
     fontSize: 14,
