@@ -23,8 +23,8 @@ class _AppRadarChartState extends State<AppRadarChart> {
         tickBorderData: BorderSide(color: Colors.white.withOpacity(0.2)),
         radarBorderData: const BorderSide(color: Colors.transparent),
         gridBorderData: const BorderSide(color: Colors.white, width: 0.3),
-        tickCount: 3,
-        ticksTextStyle: AppTextStyles.lowWhiteBold,
+        tickCount: 7,
+        ticksTextStyle: const TextStyle(color: Colors.transparent),
         titleTextStyle: AppTextStyles.midWhiteBold,
         getTitle: (index) {
           switch (index) {
@@ -50,7 +50,7 @@ class _AppRadarChartState extends State<AppRadarChart> {
               }
             case 5:
               {
-                return 'S';
+                return 'SW';
               }
             case 6:
               {

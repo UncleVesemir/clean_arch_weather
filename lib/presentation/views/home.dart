@@ -7,22 +7,18 @@ import 'package:clean_arch_weather/presentation/enums/params.dart';
 import 'package:clean_arch_weather/presentation/enums/period.dart';
 import 'package:clean_arch_weather/presentation/widgets/radar_chart.dart';
 import 'package:clean_arch_weather/styles_const.dart';
-import 'package:clean_arch_weather/core/utils/constants.dart';
-import 'package:clean_arch_weather/data/gps/gps_location.dart';
-import 'package:clean_arch_weather/data/network/api_service.dart';
 import 'package:clean_arch_weather/presentation/widgets/overrides.dart';
 import 'package:clean_arch_weather/presentation/widgets/city_item.dart';
 import 'package:clean_arch_weather/presentation/widgets/main_weather_item.dart';
 import 'package:clean_arch_weather/presentation/widgets/weather_item.dart';
 import 'package:clean_arch_weather/utils.dart';
-import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_glow/flutter_glow.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -41,6 +37,8 @@ class _HomeState extends State<Home> {
   double _graphMaxY = 0;
   double _graphMinX = 0;
   double _graphMinY = 0;
+
+  bool _switcherValue = false;
 
   bool _dataLoading = false;
 
@@ -342,7 +340,13 @@ class _HomeState extends State<Home> {
     for (var element in line) {
       items.add(
         LineTooltipItem(
-          Utils.getFormattedTime(element.x, element.y),
+          _selectedParam == Params.temperature
+              ? Utils.getFormattedTemperatureData(element.x, element.y)
+              : _selectedParam == Params.windSpeed
+                  ? Utils.getFormattedWindSpeedData(element.x, element.y)
+                  : _selectedParam == Params.windDeg
+                      ? Utils.getFormattedWindDegData(element.x, element.y)
+                      : Utils.getFormattedHumidityData(element.x, element.y),
           AppTextStyles.lightLowText,
         ),
       );
@@ -508,8 +512,10 @@ class _HomeState extends State<Home> {
               : value == 2
                   ? _selectedParam = Params.windDeg
                   : value == 3
-                      ? _selectedParam = Params.humidity
-                      : Params.windSpeed;
+                      ? _selectedParam = Params.windDeg
+                      : value == 4
+                          ? _selectedParam = Params.humidity
+                          : Params.temperature;
       _initChart(state);
     });
   }
@@ -534,13 +540,14 @@ class _HomeState extends State<Home> {
           height: 80,
           child: ListWheelScrollViewX(
             scrollDirection: Axis.horizontal,
-            itemExtent: 150,
+            itemExtent: 140,
             onSelectedItemChanged: (value) => _onTopItemChanged(value, state),
             children: [
               _paramTopItem('Temperature', 0),
               _paramTopItem('Wind Speed', 1),
-              _paramTopItem('Wind Deg', 2),
-              _paramTopItem('Humidity', 3),
+              _paramTopItem('Rose Of Winds', 2),
+              _paramTopItem('Wind Degrees', 3),
+              _paramTopItem('Humidity', 4),
             ],
           ),
         ),
@@ -670,10 +677,10 @@ class _HomeState extends State<Home> {
       padding: const EdgeInsets.only(left: 18, right: 18),
       child: state is RemoteWeatherLoading
           ? Column(
-              children: [
-                const SizedBox(height: 70),
+              children: const [
+                SizedBox(height: 70),
                 SpinKitWave(
-                  color: AppColors.lowDarkColor,
+                  color: Colors.white,
                 ),
               ],
             )
@@ -697,7 +704,7 @@ class _HomeState extends State<Home> {
                               Row(
                                 children: const [
                                   Text(
-                                    'Next 7 Days',
+                                    'Next Day',
                                     style: AppTextStyles.lowText,
                                   ),
                                   SizedBox(width: 10),
@@ -780,11 +787,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void getLocation() async {
-    var data = await GetLocation.getPermission();
-    print(data ?? 'null');
-  }
-
   List<MainItem> _initMainList(RemoteWeatherState state) {
     List<MainItem> _items = [];
     for (var i = 0; i < state.weather!.daily.length; i++) {
@@ -824,73 +826,106 @@ class _HomeState extends State<Home> {
           ? 'Today, $day $month'
           : isTomorrow
               ? 'Tomorrow $day $month'
-              : '${Utils.getWeekdayName(date.weekday)}, $day $month',
+              // : '${Utils.getWeekdayName(date.weekday)}, $day $month',
+              : '$day $month',
       style: AppTextStyles.lowDarkS24W400Normal,
     );
   }
 
   Widget _buildBody(RemoteWeatherState state) {
-    return SafeArea(
-      child: Stack(
-        children: <Widget>[
-          state is RemoteWeatherLoading
-              ? Container(
-                  color: AppColors.mainLow,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 200),
-                      SpinKitWave(
-                        color: AppColors.darkColor,
-                        itemCount: 6,
-                      ),
-                    ],
-                  ),
-                )
-              : state is RemoteWeatherDone
-                  ? Container(
-                      color: AppColors.mainLow,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 25.0, top: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildDate(state),
-                                const SizedBox(height: 3),
-                                Text('Polotsk', style: AppTextStyles.cityName),
-                              ],
+    return Container(
+      color: AppColors.mainMid,
+      // color: Colors.white,
+      child: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            state is RemoteWeatherLoading
+                ? Container(
+                    // color: AppColors.mainLow,
+                    color: AppColors.mainScaffold,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 200),
+                        SpinKitWave(
+                          color: AppColors.mainMid,
+                          itemCount: 6,
+                        ),
+                      ],
+                    ),
+                  )
+                : state is RemoteWeatherDone
+                    ? Container(
+                        // color: AppColors.mainLow,
+                        color: AppColors.mainScaffold,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 25.0, top: 10, right: 25),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildDate(state),
+                                      const SizedBox(height: 3),
+                                      Text('Polotsk',
+                                          style: AppTextStyles.cityName),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 60,
+                                    height: 40,
+                                    child: FlutterSwitch(
+                                      value: _switcherValue,
+                                      onToggle: (value) {
+                                        setState(() {
+                                          _switcherValue = value;
+                                        });
+                                      },
+                                      activeColor: AppColors.mainMid,
+                                      inactiveColor: AppColors.mainLow,
+                                      toggleSize: 10,
+                                      borderRadius: 5,
+                                      showOnOff: true,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 360,
-                            width: double.infinity,
-                            child: ListWheelScrollViewX(
-                              itemExtent: 350,
-                              diameterRatio: 5,
-                              scrollDirection: Axis.horizontal,
-                              children: _initMainList(state),
-                              onSelectedItemChanged: _onMainItemChange,
+                            SizedBox(
+                              height: 360,
+                              width: double.infinity,
+                              child: ListWheelScrollViewX(
+                                itemExtent: 350,
+                                diameterRatio: 5,
+                                scrollDirection: Axis.horizontal,
+                                children: _initMainList(state),
+                                onSelectedItemChanged: _onMainItemChange,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Text(state.error!.message),
-          _buildSheet(state),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: -5 * (1 - _percent * 80),
-            child: Opacity(
-              opacity: 1 + _percent,
-              child: _buildBottomBar(),
+                          ],
+                        ),
+                      )
+                    : Text(state.error!.message),
+            _buildSheet(state),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: -5 * (1 - _percent * 80),
+              child: Opacity(
+                opacity: 1 + _percent,
+                child: _buildBottomBar(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -900,11 +935,11 @@ class _HomeState extends State<Home> {
       elevation: 0,
       toolbarHeight: 0,
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: AppColors.mainLow,
-        systemNavigationBarColor: AppColors.mainLow,
-        systemNavigationBarDividerColor: AppColors.mainLow,
+        statusBarColor: AppColors.mainScaffold,
+        systemNavigationBarColor: AppColors.mainScaffold,
+        systemNavigationBarDividerColor: AppColors.mainScaffold,
         statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-        statusBarBrightness: Brightness.dark, // For iOS (dark icons)
+        statusBarBrightness: Brightness.light, // For iOS (dark icons)
       ),
     );
   }

@@ -16,10 +16,19 @@ class AppColors {
   // static HexColor mainLowMid = HexColor('#864879');
   // static HexColor mainLow = HexColor('#E9A6A6');
 
-  static HexColor mainDark = HexColor('#041C32');
-  static HexColor mainMid = HexColor('#04293A');
+  //BLUE
+  static HexColor mainMid = HexColor('#001064');
+  static HexColor mainLow = HexColor('#5f5fc4');
+  static HexColor mainDark = HexColor('#001064');
+  static HexColor mainScaffold = HexColor('#FFFFFF');
+
+  // static HexColor mainDark = HexColor('#041C32');
+  // static HexColor mainDark = HexColor('#001064');
+  // static HexColor mainMid = HexColor('#04293A');
+  // static HexColor mainMid = HexColor('#001064');
   static HexColor mainLowMid = HexColor('#064663');
-  static HexColor mainLow = HexColor('#ECB365');
+  // static HexColor mainLow = HexColor('#ECB365');
+  // static HexColor mainLow = HexColor('#5f5fc4');
 }
 
 class AppGradientColors {
@@ -38,11 +47,6 @@ class AppGradientColors {
     AppColors.mainDark,
     AppColors.mainDark,
     AppColors.mainDark.withOpacity(0.95),
-  ];
-
-  static final List<Color> test = [
-    HexColor('#000000'),
-    HexColor('#ffffff'),
   ];
 }
 

@@ -53,48 +53,55 @@ class MainItem extends StatelessWidget {
       );
     }
 
-    return Container(
-      width: 150,
-      height: 320,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(45),
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(45.0),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 160,
-              width: 160,
-              child: Image.asset(image),
-            ),
-            const SizedBox(height: 15),
-            // GradientText(
-            //   description,
-            //   gradientDirection: GradientDirection.btt,
-            //   colors: AppGradientColors.gradientText,
-            //   style: AppTextStyles.bigTextDarkColor,
-            // ),
-            Text(
-              Utils.toUpperCase(description),
-              style: AppTextStyles.descriptionBold,
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(width: 10),
-                _rowItem('Wind', '${windSpeed.toInt()} m/s'),
-                _verticalDivider(),
-                _rowItem('Temp', '${temp.toInt()}°C'),
-                _verticalDivider(),
-                _rowItem('Humid.', '${humidity.toInt()}%'),
-                const SizedBox(width: 10),
-              ],
-            ),
-          ],
+      // color: Colors.transparent,
+      child: Container(
+        // width: 120,
+        height: 340,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(45),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 160,
+                width: 160,
+                child: Image.asset(image),
+              ),
+              const SizedBox(height: 15),
+              // GradientText(
+              //   description,
+              //   gradientDirection: GradientDirection.btt,
+              //   colors: AppGradientColors.gradientText,
+              //   style: AppTextStyles.bigTextDarkColor,
+              // ),
+              Text(
+                Utils.toUpperCase(description),
+                style: AppTextStyles.descriptionBold,
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 10),
+                  _rowItem('Wind', '${windSpeed.toInt()} m/s'),
+                  _verticalDivider(),
+                  _rowItem('Temp', '${temp.toInt()}°C'),
+                  _verticalDivider(),
+                  _rowItem('Humid.', '${humidity.toInt()}%'),
+                  const SizedBox(width: 10),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

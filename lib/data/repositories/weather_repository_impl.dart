@@ -1,8 +1,7 @@
 import 'dart:io';
 
-import 'package:clean_arch_weather/core/params/weather_reques.dart';
+import 'package:clean_arch_weather/core/params/weather_request.dart';
 import 'package:clean_arch_weather/core/resources/data_state.dart';
-import 'package:clean_arch_weather/core/utils/constants.dart';
 import 'package:clean_arch_weather/data/network/api_service.dart';
 import 'package:clean_arch_weather/domain/entities/weather.dart';
 import 'package:clean_arch_weather/domain/repositories/weather_repository.dart';
@@ -16,11 +15,11 @@ class WeatherRepositoryImpl implements WeatherRepository {
   @override
   Future<DataState<Weather>> getWeather(WeatherRequestParams params) async {
     try {
-      final httpResponse =
-          await _weatherApiService.getWeather(42, 32, kAppId, 'en', 'metric');
+      final httpResponse = await _weatherApiService.getWeather(
+          params.lat, params.lon, params.appId, params.lang, params.units);
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        return DataSuccess(httpResponse.data as Weather);
+        return DataSuccess(httpResponse.data);
       }
       return DataFailed(
         DioError(

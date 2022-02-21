@@ -118,6 +118,70 @@ final descriptionValues = EnumValues({
   "overcast clouds": Description.OVERCAST_CLOUDS,
 });
 
+final detailedImageValues = EnumValues({
+  "thunderstorm with light rain": Images.cloud + '17.png',
+  "thunderstorm with rain": Images.cloud + '17.png',
+  "thunderstorm with heavy rain": Images.cloud + '17.png',
+  "light thunderstorm": Images.cloud + '12.png',
+  "thunderstorm": Images.cloud + '12.png',
+  "heavy thunderstorm": Images.cloud + '24.png',
+  "ragged thunderstorm": Images.cloud + '24.png',
+  "thunderstorm with light drizzle": Images.cloud + '17.png',
+  "thunderstorm with drizzle": Images.cloud + '17.png',
+  "thunderstorm with heavy drizzle": Images.cloud + '17.png',
+
+  //
+  "light intensity drizzle": Images.cloud + '17.png',
+  "drizzle": Images.cloud + '17.png',
+  "heavy intensity drizzle": Images.cloud + '17.png',
+  "light intensity drizzle rain": Images.cloud + '17.png',
+  "drizzle rain": Images.cloud + '17.png',
+  "heavy intensity drizzle rain": Images.cloud + '17.png',
+  "shower rain and drizzle": Images.cloud + '17.png',
+  "heavy shower rain and drizzle": Images.cloud + '17.png',
+  "shower drizzle": Images.cloud + '17.png',
+  //
+  "light rain": Description.LIGHT_RAIN,
+  "moderate rain": Description.MODERATE_RAIN,
+  "heavy intensity rain": Description.HEAVY_INTENSITY_RAIN,
+  "very heavy rain": Description.VERY_HEAVY_RAIN,
+  "extreme rain": Description.EXTREME_RAIN,
+  "freezing rain": Description.FREEZING_RAIN,
+  "light intensity shower rain": Description.LIGHT_INTENSITY_SHOWER_RAIN,
+  "shower rain": Description.SHOWER_RAIN,
+  "heavy intensity shower rain": Description.HEAVY_INTENSITY_SHOWER_RAIN,
+  "ragged shower rain": Description.RAGGED_SHOWER_RAIN,
+  //
+  "light snow": Description.LIGHT_SNOW,
+  "Snow": Description.SNOW,
+  "Heavy snow": Description.HEAVY_SNOW,
+  "Sleet": Description.SLEET,
+  "Light shower sleet": Description.LIGHT_SHOWER_SLEET,
+  "Shower sleet": Description.SHOWER_SLEET,
+  "Light rain and snow": Description.LIGHT_RAIN_AND_SNOW,
+  "Rain and snow": Description.RAIND_AND_SNOW,
+  "Light shower snow": Description.LIGHT_SHOWER_SNOW,
+  "Shower snow": Description.SHOWER_SNOW,
+  //
+  "mist": Description.MIST,
+  "Smoke": Description.SMOKE,
+  "Haze": Description.HAZE,
+  "sand/ dust whirls": Description.SAND_DUST_WHIRLS,
+  "fog": Description.FOG,
+  "sand": Description.SAND,
+  "dust": Description.DUST,
+  "volcanic ash": Description.VOLCANIC_ASH,
+  "squalls": Description.SQUALLS,
+  "tornado": Description.TORNADO,
+  //
+  "clear sky": Description.CLEAR_SKY,
+  //
+  "few clouds": Description.FEW_CLOUDS,
+  "broken clouds": Description.BROKEN_CLOUDS,
+  "scattered clouds": Description.SCATTERED_CLOUDS,
+  "overcast clouds": Description.OVERCAST_CLOUDS,
+});
+
 enum Description {
 //THUNDERSTORM
   THUNDERSTORM_WITH_LIGHT_RAIN,

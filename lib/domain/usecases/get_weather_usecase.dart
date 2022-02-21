@@ -1,4 +1,4 @@
-import 'package:clean_arch_weather/core/params/weather_reques.dart';
+import 'package:clean_arch_weather/core/params/weather_request.dart';
 import 'package:clean_arch_weather/core/usecases/usecase.dart';
 import 'package:clean_arch_weather/domain/entities/weather.dart';
 import 'package:clean_arch_weather/domain/repositories/weather_repository.dart';
@@ -13,6 +13,6 @@ class GetWeatherUseCase
   @override
   Future<DataState<Weather>> call({required WeatherRequestParams params}) {
     return _weatherRepository
-        .getWeather(WeatherRequestParams(lat: 32, lon: 44));
+        .getWeather(WeatherRequestParams(lat: params.lat, lon: params.lon));
   }
 }

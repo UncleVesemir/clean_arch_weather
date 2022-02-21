@@ -22,7 +22,7 @@ class Utils {
     }
   }
 
-  static String getFormattedTime(double x, double y) {
+  static String getFormattedTemperatureData(double x, double y) {
     final date = DateTime.fromMillisecondsSinceEpoch(x.toInt() * 1000);
     var minutes = date.minute;
     var minutesToStr = '';
@@ -34,6 +34,57 @@ class Utils {
     final month = Utils.getMonthName(date.month);
     final weekDay = Utils.getWeekdayName(date.weekday);
     return '$month ${date.day}, $weekDay, ${date.hour}:$minutesToStr, $y°C';
+  }
+
+  static String getFormattedWindSpeedData(double x, double y) {
+    final date = DateTime.fromMillisecondsSinceEpoch(x.toInt() * 1000);
+    var minutes = date.minute;
+    var minutesToStr = '';
+    if (minutes < 10) {
+      minutesToStr = '0$minutes';
+    } else {
+      minutesToStr = minutes.toString();
+    }
+    final month = Utils.getMonthName(date.month);
+    final weekDay = Utils.getWeekdayName(date.weekday);
+    return '$month ${date.day}, $weekDay, ${date.hour}:$minutesToStr, $y m/s';
+  }
+
+  static String getFormattedWindDegData(double x, double y) {
+    final date = DateTime.fromMillisecondsSinceEpoch(x.toInt() * 1000);
+    var minutes = date.minute;
+    var minutesToStr = '';
+    if (minutes < 10) {
+      minutesToStr = '0$minutes';
+    } else {
+      minutesToStr = minutes.toString();
+    }
+    final month = Utils.getMonthName(date.month);
+    final weekDay = Utils.getWeekdayName(date.weekday);
+    var windDeg = '';
+    if (y > 22.5 && y <= 67.5) windDeg = 'North-East';
+    if (y > 67.5 && y <= 112.5) windDeg = 'North-East';
+    if (y > 112.5 && y <= 157.5) windDeg = 'East';
+    if (y > 202.5 && y <= 247.5) windDeg = 'South-East';
+    if (y > 157.5 && y <= 202.5) windDeg = 'South';
+    if (y > 247.5 && y <= 292.5) windDeg = 'South-West';
+    if (y > 292.5 && y <= 337.5) windDeg = 'West';
+    if (y > 337.5 || y <= 22.5) windDeg = 'North-West';
+    return '$month ${date.day}, $weekDay, ${date.hour}:$minutesToStr, $windDeg';
+  }
+
+  static String getFormattedHumidityData(double x, double y) {
+    final date = DateTime.fromMillisecondsSinceEpoch(x.toInt() * 1000);
+    var minutes = date.minute;
+    var minutesToStr = '';
+    if (minutes < 10) {
+      minutesToStr = '0$minutes';
+    } else {
+      minutesToStr = minutes.toString();
+    }
+    final month = Utils.getMonthName(date.month);
+    final weekDay = Utils.getWeekdayName(date.weekday);
+    return '$month ${date.day}, $weekDay, ${date.hour}:$minutesToStr, $y%';
   }
 
   static String getDateTimePeriodHourly(RemoteWeatherState state) {
