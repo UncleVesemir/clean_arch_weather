@@ -3,6 +3,7 @@ import 'package:clean_arch_weather/data/network/models/daily.dart';
 import 'package:clean_arch_weather/domain/entities/current.dart';
 import 'package:clean_arch_weather/domain/entities/daily.dart';
 import 'package:clean_arch_weather/domain/entities/weather.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'weather_response.g.dart';
@@ -30,12 +31,14 @@ class WeatherResponse extends Weather {
     required Current current,
     required List<Current> hourly,
     required List<Daily> daily,
+    List<Placemark?>? place,
   }) : super(
           lat: lat,
           lon: lon,
           current: current,
           hourly: hourly,
           daily: daily,
+          place: place,
         );
 
   factory WeatherResponse.fromJson(Map<String, dynamic> json) =>

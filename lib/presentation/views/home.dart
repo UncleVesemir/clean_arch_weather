@@ -17,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:geocoding/geocoding.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -850,7 +851,31 @@ class _HomeState extends State<Home> {
                                     children: [
                                       _buildDate(state),
                                       const SizedBox(height: 3),
-                                      Text('Polotsk',
+                                      Text(
+                                          state.weather!.place != null
+                                              ? state.weather!.place![0]!
+                                                          .locality !=
+                                                      null
+                                                  ? state.weather!.place![0]!
+                                                      .locality!
+                                                  : state.weather!.place![0]!
+                                                              .subAdministrativeArea !=
+                                                          null
+                                                      ? state
+                                                          .weather!
+                                                          .place![0]!
+                                                          .subAdministrativeArea!
+                                                      : state
+                                                                  .weather!
+                                                                  .place![0]!
+                                                                  .country !=
+                                                              null
+                                                          ? state
+                                                              .weather!
+                                                              .place![0]!
+                                                              .country!
+                                                          : 'Error'
+                                              : 'Error',
                                           style: AppTextStyles.cityName),
                                     ],
                                   ),
@@ -919,9 +944,16 @@ class _HomeState extends State<Home> {
     );
   }
 
+  // void initPlaces() async {
+  //   List<Placemark> placemarks =
+  //       await placemarkFromCoordinates(55.534144, 28.667853);
+  //   print(placemarks);
+  // }
+
   @override
   Widget build(BuildContext context) {
     // getLocation();
+    // initPlaces();
     return BlocBuilder<RemoteWeatherBloc, RemoteWeatherState>(
       builder: (context, state) {
         return Scaffold(

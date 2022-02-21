@@ -41,6 +41,7 @@ dependencies:
 
 #GPS
   location: ^4.3.0
+  geocoding: ^2.0.2
 
 #OTHER
   cupertino_icons: ^1.0.2

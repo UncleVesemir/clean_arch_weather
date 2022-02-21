@@ -6,6 +6,7 @@ import 'package:clean_arch_weather/domain/entities/weather.dart';
 import 'package:clean_arch_weather/domain/usecases/get_weather_usecase.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:geocoding/geocoding.dart' as geo;
 import 'package:location/location.dart';
 
 part 'remote_weather_event.dart';
@@ -67,14 +68,36 @@ class RemoteWeatherBloc
 
   Future<void> _getWeather(RemoteWeatherEvent event) async {
     final CurrentLocation? location = await _getLocation();
+    List<geo.Placemark> placemarks = [];
     if (location != null) {
       final dataState = await _getWeatherUseCase(
           params: WeatherRequestParams(lat: location.lat, lon: location.lon));
 
+      try {
+        placemarks =
+            await geo.placemarkFromCoordinates(location.lat, location.lon);
+        print(placemarks);
+      } catch (e) {
+        print(e);
+      }
+
       print('lat - ${dataState.data!.lat} lon - ${dataState.data!.lon}');
+
       if (dataState is DataSuccess && dataState.data != null) {
-        final weather = dataState.data!;
-        emit(RemoteWeatherDone(weather: weather));
+        var weather = dataState.data!;
+        if (placemarks.isNotEmpty) {
+          var result = Weather(
+            current: weather.current,
+            daily: weather.daily,
+            lat: weather.lat,
+            lon: weather.lon,
+            hourly: weather.hourly,
+            place: placemarks,
+          );
+          emit(RemoteWeatherDone(weather: result));
+        } else {
+          emit(RemoteWeatherDone(weather: weather));
+        }
       }
       if (dataState is DataFailed) {
         emit(RemoteWeatherError(dataState.error!));
