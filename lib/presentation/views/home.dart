@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:clean_arch_weather/domain/entities/current.dart';
 import 'package:clean_arch_weather/domain/entities/daily.dart';
 import 'package:clean_arch_weather/presentation/blocs/bloc/remote_weather_bloc.dart';
@@ -621,28 +619,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  List<WeatherItem> _initClosedSheet(RemoteWeatherState state) {
-    List<WeatherItem> _items = [];
-    for (var i = 0; i < 8; i++) {
-      var time = DateTime.fromMillisecondsSinceEpoch(
-          1000 * state.weather!.hourly[i].dt);
-      var minutes = time.minute;
-      var minutesToStr = '';
-      if (minutes < 10) {
-        minutesToStr = '0$minutes';
-      } else {
-        minutesToStr = minutes.toString();
-      }
-      _items.add(WeatherItem(
-        image: state.weather!.hourly[i].weather[0].image,
-        temp: state.weather!.hourly[i].temp,
-        time: '${time.hour}:$minutesToStr',
-      ));
-      i++;
-    }
-    return _items;
-  }
-
   ListView _weatherBuilder(RemoteWeatherState state) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
@@ -742,11 +718,13 @@ class _HomeState extends State<Home> {
       RemoteWeatherState state) {
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
-        setState(() {
-          _percent = -2 * notification.extent + 0.8;
-        });
-        if (_percent < -0.3) _initChart(state);
-        if (_percent > -0.14) _resetChart();
+        if (state.weather != null) {
+          setState(() {
+            _percent = -2 * notification.extent + 0.8;
+          });
+          if (_percent < -0.3) _initChart(state);
+          if (_percent > -0.14) _resetChart();
+        }
         return true;
       },
       child: DraggableScrollableSheet(
@@ -811,12 +789,9 @@ class _HomeState extends State<Home> {
   Text _buildDate(RemoteWeatherState state) {
     var date = DateTime.fromMillisecondsSinceEpoch(
         1000 * state.weather!.daily[_selectedItem].dt);
-    var day = DateTime.fromMillisecondsSinceEpoch(
-            1000 * state.weather!.daily[_selectedItem].dt)
-        .day;
-    var month = Utils.getMonthName(DateTime.fromMillisecondsSinceEpoch(
-            1000 * state.weather!.daily[_selectedItem].dt)
-        .month);
+    var day = date.day;
+    var _today = DateTime.now().day;
+    var month = Utils.getMonthName(date.month);
     bool isToday = false;
     bool isTomorrow = false;
     if (_today == day) isToday = true;

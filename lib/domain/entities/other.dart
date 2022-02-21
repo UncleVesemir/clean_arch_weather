@@ -1,5 +1,7 @@
 // MUST BE IMPLEMENTED LATER
 
+// ignore_for_file: constant_identifier_names
+
 class EnumValues<T> {
   Map<String, T> map;
   Map<T, String>? reverseMap;

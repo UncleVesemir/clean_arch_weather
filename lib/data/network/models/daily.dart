@@ -28,7 +28,7 @@ class DailyModel extends Daily {
   // @JsonKey(name: 'weather')
   // final List<WeatherElementModel> weather;
 
-  DailyModel({
+  const DailyModel({
     required int dt,
     required TemperatureModel temp,
     required int pressure,
