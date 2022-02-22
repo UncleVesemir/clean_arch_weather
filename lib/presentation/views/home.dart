@@ -3,13 +3,14 @@ import 'package:clean_arch_weather/domain/entities/daily.dart';
 import 'package:clean_arch_weather/presentation/blocs/bloc/remote_weather_bloc.dart';
 import 'package:clean_arch_weather/presentation/enums/params.dart';
 import 'package:clean_arch_weather/presentation/enums/period.dart';
+import 'package:clean_arch_weather/presentation/utils/presentation_utils.dart';
+import 'package:clean_arch_weather/presentation/views/settings.dart';
 import 'package:clean_arch_weather/presentation/widgets/radar_chart.dart';
 import 'package:clean_arch_weather/styles_const.dart';
 import 'package:clean_arch_weather/presentation/widgets/overrides.dart';
 import 'package:clean_arch_weather/presentation/widgets/city_item.dart';
 import 'package:clean_arch_weather/presentation/widgets/main_weather_item.dart';
 import 'package:clean_arch_weather/presentation/widgets/weather_item.dart';
-import 'package:clean_arch_weather/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -17,7 +18,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:geocoding/geocoding.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -110,27 +110,36 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Padding _buildBottomBar() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 18.0),
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(25)),
-        ),
+  Positioned _buildBottomBar() {
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: -5 * (1 - _percent * 80),
+      child: Opacity(
+        opacity: 1 + _percent * 5 >= 0 ? 1 + _percent * 4 : 0,
         child: Padding(
-          padding:
-              const EdgeInsets.only(left: 7.0, right: 7.0, top: 7.0, bottom: 7),
-          child: BottomNavyBar(
-            backgroundColor: Colors.white,
-            showElevation: false,
-            selectedIndex: _currentPageIndex,
-            itemCornerRadius: 15,
-            containerHeight: 70,
-            curve: Curves.easeIn,
-            items: _bottomBarItems,
-            onItemSelected: (index) =>
-                setState(() => _currentPageIndex = index),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 18.0),
+          child: Card(
+            elevation: 15,
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 7.0, right: 7.0, top: 7.0, bottom: 7),
+              child: BottomNavyBar(
+                backgroundColor: Colors.white,
+                showElevation: false,
+                selectedIndex: _currentPageIndex,
+                itemCornerRadius: 15,
+                containerHeight: 70,
+                curve: Curves.easeIn,
+                items: _bottomBarItems,
+                onItemSelected: (index) =>
+                    setState(() => _currentPageIndex = index),
+              ),
+            ),
           ),
         ),
       ),
@@ -340,12 +349,16 @@ class _HomeState extends State<Home> {
       items.add(
         LineTooltipItem(
           _selectedParam == Params.temperature
-              ? Utils.getFormattedTemperatureData(element.x, element.y)
+              ? PresentationUtils.getFormattedTemperatureData(
+                  element.x, element.y)
               : _selectedParam == Params.windSpeed
-                  ? Utils.getFormattedWindSpeedData(element.x, element.y)
+                  ? PresentationUtils.getFormattedWindSpeedData(
+                      element.x, element.y)
                   : _selectedParam == Params.windDeg
-                      ? Utils.getFormattedWindDegData(element.x, element.y)
-                      : Utils.getFormattedHumidityData(element.x, element.y),
+                      ? PresentationUtils.getFormattedWindDegData(
+                          element.x, element.y)
+                      : PresentationUtils.getFormattedHumidityData(
+                          element.x, element.y),
           AppTextStyles.lightLowText,
         ),
       );
@@ -574,8 +587,10 @@ class _HomeState extends State<Home> {
             onSelectedItemChanged: (value) =>
                 _onBottomItemChanged(value, state),
             children: [
-              _paramBottomItem(Utils.getDateTimePeriodHourly(state), 0),
-              _paramBottomItem(Utils.getDateTimePeriodDaily(state), 1),
+              _paramBottomItem(
+                  PresentationUtils.getDateTimePeriodHourly(state), 0),
+              _paramBottomItem(
+                  PresentationUtils.getDateTimePeriodDaily(state), 1),
             ],
           ),
         ),
@@ -792,7 +807,7 @@ class _HomeState extends State<Home> {
         1000 * state.weather!.daily[_selectedItem].dt);
     var day = date.day;
     var _today = DateTime.now().day;
-    var month = Utils.getMonthName(date.month);
+    var month = PresentationUtils.getMonthName(date.month);
     bool isToday = false;
     bool isTomorrow = false;
     if (_today == day) isToday = true;
@@ -808,124 +823,167 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildBody(RemoteWeatherState state) {
-    return Container(
-      color: AppColors.mainMid,
-      // color: Colors.white,
-      child: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            state is RemoteWeatherLoading
+  // return Padding(
+  //             padding: const EdgeInsets.all(45),
+  //             child: Card(
+  //               shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(12.0),
+  //               ),
+  //               color: Colors.white,
+  //               child: Padding(
+  //                 padding: const EdgeInsets.all(24),
+  //                 child: Column(
+  //                   children: [
+  //                     PresentationUtils.getCurrentPlaceInfo(state),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+
+  Widget _infoButton(RemoteWeatherState state) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: Colors.transparent,
+              insetPadding: EdgeInsets.zero,
+              contentPadding: EdgeInsets.zero,
+              titlePadding: EdgeInsets.zero,
+              buttonPadding: EdgeInsets.zero,
+              actions: [
+                TextButton(
+                  child: Container(
+                      height: 45,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text('Close'),
+                            Icon(
+                              Icons.close,
+                              size: 15,
+                            ),
+                          ],
+                        ),
+                      )),
+                  onPressed: () => Navigator.pop(context),
+                )
+              ],
+              content: SizedBox(
+                height: 400,
+                width: 200,
+                child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        Expanded(
+                            child:
+                                PresentationUtils.getCurrentPlaceInfo(state)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+      child: Icon(
+        Icons.info_outline,
+        color: AppColors.mainDark,
+      ),
+    );
+  }
+
+  Widget _body(RemoteWeatherState state) {
+    return Stack(
+      children: <Widget>[
+        state is RemoteWeatherLoading
+            ? Container(
+                // color: AppColors.mainLow,
+                color: AppColors.mainScaffold,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 200),
+                    SpinKitWave(
+                      color: AppColors.mainMid,
+                      itemCount: 6,
+                    ),
+                  ],
+                ),
+              )
+            : state is RemoteWeatherDone
                 ? Container(
                     // color: AppColors.mainLow,
                     color: AppColors.mainScaffold,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 200),
-                        SpinKitWave(
-                          color: AppColors.mainMid,
-                          itemCount: 6,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 25.0, top: 10, right: 25),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildDate(state),
+                              const SizedBox(height: 3),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    PresentationUtils.getLocationName(state),
+                                    style: AppTextStyles.cityName,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  _infoButton(state),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 360,
+                          width: double.infinity,
+                          child: ListWheelScrollViewX(
+                            itemExtent: 350,
+                            diameterRatio: 5,
+                            scrollDirection: Axis.horizontal,
+                            children: _initMainList(state),
+                            onSelectedItemChanged: _onMainItemChange,
+                          ),
                         ),
                       ],
                     ),
                   )
-                : state is RemoteWeatherDone
-                    ? Container(
-                        // color: AppColors.mainLow,
-                        color: AppColors.mainScaffold,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 25.0, top: 10, right: 25),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      _buildDate(state),
-                                      const SizedBox(height: 3),
-                                      Text(
-                                          state.weather!.place != null
-                                              ? state.weather!.place![0]!
-                                                          .locality !=
-                                                      null
-                                                  ? state.weather!.place![0]!
-                                                      .locality!
-                                                  : state.weather!.place![0]!
-                                                              .subAdministrativeArea !=
-                                                          null
-                                                      ? state
-                                                          .weather!
-                                                          .place![0]!
-                                                          .subAdministrativeArea!
-                                                      : state
-                                                                  .weather!
-                                                                  .place![0]!
-                                                                  .country !=
-                                                              null
-                                                          ? state
-                                                              .weather!
-                                                              .place![0]!
-                                                              .country!
-                                                          : 'Error'
-                                              : 'Error',
-                                          style: AppTextStyles.cityName),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 60,
-                                    height: 40,
-                                    child: FlutterSwitch(
-                                      value: _switcherValue,
-                                      onToggle: (value) {
-                                        setState(() {
-                                          _switcherValue = value;
-                                        });
-                                      },
-                                      activeColor: AppColors.mainMid,
-                                      inactiveColor: AppColors.mainLow,
-                                      toggleSize: 10,
-                                      borderRadius: 5,
-                                      showOnOff: true,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 360,
-                              width: double.infinity,
-                              child: ListWheelScrollViewX(
-                                itemExtent: 350,
-                                diameterRatio: 5,
-                                scrollDirection: Axis.horizontal,
-                                children: _initMainList(state),
-                                onSelectedItemChanged: _onMainItemChange,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Text(state.error!.message),
-            _buildSheet(state),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: -5 * (1 - _percent * 80),
-              child: Opacity(
-                opacity: 1 + _percent,
-                child: _buildBottomBar(),
-              ),
-            ),
-          ],
-        ),
+                : Text(state.error!.message),
+        _buildSheet(state),
+      ],
+    );
+  }
+
+  Widget _buildBody(RemoteWeatherState state) {
+    return SafeArea(
+      child: Stack(
+        children: <Widget>[
+          _buildPage(state),
+          _buildBottomBar(),
+        ],
       ),
     );
   }
@@ -944,16 +1002,15 @@ class _HomeState extends State<Home> {
     );
   }
 
-  // void initPlaces() async {
-  //   List<Placemark> placemarks =
-  //       await placemarkFromCoordinates(55.534144, 28.667853);
-  //   print(placemarks);
-  // }
+  Widget _buildPage(RemoteWeatherState state) {
+    if (_currentPageIndex == 0) return _body(state);
+    if (_currentPageIndex == 1) return _body(state);
+    if (_currentPageIndex == 2) return const SettingsPage();
+    return Container();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // getLocation();
-    // initPlaces();
     return BlocBuilder<RemoteWeatherBloc, RemoteWeatherState>(
       builder: (context, state) {
         return Scaffold(

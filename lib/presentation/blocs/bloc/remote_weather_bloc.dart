@@ -74,8 +74,9 @@ class RemoteWeatherBloc
           params: WeatherRequestParams(lat: location.lat, lon: location.lon));
 
       try {
-        placemarks =
-            await geo.placemarkFromCoordinates(location.lat, location.lon);
+        placemarks = await geo.placemarkFromCoordinates(
+            location.lat, location.lon,
+            localeIdentifier: 'en');
         print(placemarks);
       } catch (e) {
         print(e);

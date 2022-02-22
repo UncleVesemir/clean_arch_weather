@@ -21,6 +21,10 @@ class AppColors {
   static HexColor mainLow = HexColor('#5f5fc4');
   static HexColor mainDark = HexColor('#001064');
   static HexColor mainScaffold = HexColor('#FFFFFF');
+  //SETTINGS COLORS
+  static HexColor language = HexColor('#FEECE3');
+  static HexColor units = HexColor('#E3F7FD');
+  static HexColor notifications = HexColor('#FFE2EA');
 
   // static HexColor mainDark = HexColor('#041C32');
   // static HexColor mainDark = HexColor('#001064');
@@ -51,6 +55,27 @@ class AppGradientColors {
 }
 
 class AppTextStyles {
+  static const TextStyle settingsBig = TextStyle(
+    fontFamily: 'Open Sans SemiBold',
+    color: Colors.black,
+    fontSize: 46,
+    fontWeight: FontWeight.w800,
+  );
+
+  static const TextStyle settingsMid = TextStyle(
+    fontFamily: 'Open Sans Bold',
+    color: Colors.black,
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+  );
+
+  static final TextStyle settingsSmall = TextStyle(
+    fontFamily: 'Open Sans SemiBold',
+    color: Colors.grey.withOpacity(0.8),
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+  );
+
   static const TextStyle extraLowText = TextStyle(
     color: Colors.white,
     fontSize: 11,
@@ -61,6 +86,12 @@ class AppTextStyles {
     color: AppColors.mainDark,
     fontSize: 34,
     fontWeight: FontWeight.w800,
+  );
+
+  static final TextStyle whiteInfoBold = TextStyle(
+    color: Colors.black.withOpacity(0.8),
+    fontSize: 16,
+    // fontWeight: FontWeight.w400,
   );
 
   static const TextStyle lowWhiteBold = TextStyle(

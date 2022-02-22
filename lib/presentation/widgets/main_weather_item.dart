@@ -1,5 +1,5 @@
+import 'package:clean_arch_weather/presentation/utils/presentation_utils.dart';
 import 'package:clean_arch_weather/styles_const.dart';
-import 'package:clean_arch_weather/utils.dart';
 import 'package:flutter/material.dart';
 
 class MainItem extends StatelessWidget {
@@ -82,7 +82,7 @@ class MainItem extends StatelessWidget {
               //   style: AppTextStyles.bigTextDarkColor,
               // ),
               Text(
-                Utils.toUpperCase(description),
+                PresentationUtils.toUpperCase(description),
                 style: AppTextStyles.descriptionBold,
               ),
               const SizedBox(height: 10),
