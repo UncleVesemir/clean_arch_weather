@@ -69,6 +69,20 @@ class AppTextStyles {
     fontWeight: FontWeight.w700,
   );
 
+  static const TextStyle search = TextStyle(
+    fontFamily: 'Open Sans SemiBold',
+    color: Colors.black,
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+  );
+
+  static final TextStyle searchHint = TextStyle(
+    fontFamily: 'Open Sans SemiBold',
+    color: Colors.black.withOpacity(0.5),
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+  );
+
   static final TextStyle settingsSmall = TextStyle(
     fontFamily: 'Open Sans SemiBold',
     color: Colors.grey.withOpacity(0.8),
