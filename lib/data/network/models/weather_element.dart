@@ -1,11 +1,10 @@
 import 'package:clean_arch_weather/domain/entities/other.dart';
 import 'package:clean_arch_weather/domain/entities/weather_element.dart';
 import 'package:clean_arch_weather/styles_const.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'weather_element.g.dart';
 
-@JsonSerializable()
+// @JsonSerializable()
 class WeatherElementModel extends WeatherElement {
   // @JsonKey(name: 'id')
   // final int id;

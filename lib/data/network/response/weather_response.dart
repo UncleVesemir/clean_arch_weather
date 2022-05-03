@@ -4,11 +4,10 @@ import 'package:clean_arch_weather/domain/entities/current.dart';
 import 'package:clean_arch_weather/domain/entities/daily.dart';
 import 'package:clean_arch_weather/domain/entities/weather.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'weather_response.g.dart';
 
-@JsonSerializable()
+// @JsonSerializable()
 class WeatherResponse extends Weather {
   // @JsonKey(name: 'lat')
   // final double lat;

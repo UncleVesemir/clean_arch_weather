@@ -1,10 +1,9 @@
 import 'package:clean_arch_weather/data/network/models/weather_element.dart';
 import 'package:clean_arch_weather/domain/entities/current.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'current.g.dart';
 
-@JsonSerializable()
+// @JsonSerializable()
 class CurrentModel extends Current {
   // @JsonKey(name: 'dt')
   // final int dt;

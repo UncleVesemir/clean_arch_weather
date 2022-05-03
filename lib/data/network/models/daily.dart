@@ -1,11 +1,10 @@
 import 'package:clean_arch_weather/data/network/models/temperature.dart';
 import 'package:clean_arch_weather/data/network/models/weather_element.dart';
 import 'package:clean_arch_weather/domain/entities/daily.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'daily.g.dart';
 
-@JsonSerializable()
+// @JsonSerializable()
 class DailyModel extends Daily {
   // @JsonKey(name: 'dt')
   // final int dt;

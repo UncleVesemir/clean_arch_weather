@@ -1,9 +1,8 @@
 import 'package:clean_arch_weather/domain/entities/temperature.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'temperature.g.dart';
 
-@JsonSerializable()
+// @JsonSerializable()
 class TemperatureModel extends Temperature {
   // @JsonKey(name: 'day')
   // final double day;
